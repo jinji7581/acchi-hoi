@@ -1,9 +1,9 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { Title } from "./pages/Title";
-import { Setup } from "./pages/Setup";
-import { Play } from "./pages/Play";
-import { Result } from "./pages/Result";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Title from "./pages/Title";
+import Setup from "./pages/Setup";
+import Play from "./pages/Play";
+import Result from "./pages/Result";
 
 const App: React.FC = () => {
   return (
