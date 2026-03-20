@@ -3,14 +3,11 @@
 // import viteLogo from "./assets/vite.svg";
 // import heroImg from "./assets/hero.png";
 import "./App.css";
-import Title from "./pages/Title";
+// import Title from "./pages/Title";
 
 function App() {
   return (
     <>
-      <div>
-        <Title />
-      </div>
     </>
   );
 }
