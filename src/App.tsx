@@ -3,8 +3,7 @@
 // import viteLogo from "./assets/vite.svg";
 // import heroImg from "./assets/hero.png";
 import "./App.css";
-import Title from "./pages/Title.tsx";
-import Setup from "./pages/Setup.tsx";
+import Title from "./pages/Title";
 
 function App() {
   return (

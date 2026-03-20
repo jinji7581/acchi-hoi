@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React /*, { useState, useEffect } */ from "react";
 import "./Pages.css";
 import { useNavigate } from "react-router-dom";
 
 const Title: React.FC = () => {
   const navigate = useNavigate();
   const clickStart = () => {
-    navigate("/setup");
+    navigate("/Setup");
   };
+
   return (
     <div className="game-container">
       <div className="back"></div>
