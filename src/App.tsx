@@ -5,12 +5,13 @@
 import "./App.css";
 import Title from "./pages/Title.tsx";
 import Setup from "./pages/Setup.tsx";
+import Result from "./pages/Result.tsx";
 
 function App() {
   return (
     <>
       <div>
-        <Setup />
+        <Title />
       </div>
 
       {/* <section id="center">
