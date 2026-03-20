@@ -2,6 +2,7 @@
 import "./Pages.css";
 // import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../zustand";
+import { useNavigate } from "react-router-dom";
 
 const Setup: React.FC = () => {
   // グローバル変数
@@ -21,8 +22,9 @@ const Setup: React.FC = () => {
 
   // 画面遷移処理
 
-  const clickBack = () => {};
-  const clickStart = () => {};
+  const navigate = useNavigate();
+  const clickBack = () => { navigate("/") };
+  const clickStart = () => { navigate("/Play") };
 
   // 変数の変動処理
   const decreaseNumber = () => {
