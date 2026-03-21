@@ -1,30 +1,37 @@
 import React, { useEffect } from "react";
-// import {GameState} from "../../../zzz_globalVar"
+import { useGameStore } from "../../../zustand";
 export const Judge: React.FC = () => {
   type Direction = "up" | "down" | "left" | "right" | "center" | null;
 
-  const currentDirections: Direction[] = ["right", "center", "up", "down"]; //仮データ
-  const playerDirections: Direction[] = ["right", "right", "down", "up"];
-  const isPointSystem: boolean = true;
-
+  const currentDirections: Direction[] = useGameStore(
+    (state) => state.currentDirections,
+  );
+  const playerDirections: Direction[] = useGameStore(
+    (state) => state.playerDirections,
+  );
+  const isPointSystem: boolean = useGameStore((state) => state.isPointSystem);
+  const increaseScore = useGameStore((state) => state.increaseScore);
+  const decleaseLife = useGameStore((state) => state.decreaseLife);
+  const scores: number[] = useGameStore((state) => state.scores);
   useEffect(() => {
     let counter: number = 0;
-    for (const element of playerDirections) {
+    for (let i = 0; i < playerDirections.length; i++) {
       for (const element2 of currentDirections) {
-        if (element === element2) break;
+        if (playerDirections[i] === element2) break;
         counter = counter + 1;
       }
       if (counter === currentDirections.length) {
-        //プレイヤーのポイント増加++
+        increaseScore(i);
       } else {
         if (!isPointSystem) {
-          //プレイヤーの残機--
+          decleaseLife(i);
         }
       }
     }
+    console.log(scores);
   }, []);
 
-  return <div></div>;
+  return <></>;
 };
 
 export default Judge;
