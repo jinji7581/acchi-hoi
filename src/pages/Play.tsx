@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Pages.css";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../zustand";
 import p1w from "../assets/p1wN.png";
 import p1m from "../assets/p1mN.png";
@@ -25,6 +25,20 @@ const Play: React.FC = () => {
     setIsMenu(true);
   };
 
+  const navigate = useNavigate();
+  const clickContinue = () => {
+    setIsMenu(false);
+  };
+  const clickStart = () => {
+    setIsMenu(false);
+  };
+  const GotoSetting = () => {
+    navigate("/Setup");
+  };
+  const GotoTitle = () => {
+    navigate("/");
+  };
+
   return (
     <div className="game-container">
       <div className="back"></div>
@@ -39,11 +53,26 @@ const Play: React.FC = () => {
           </div>
         ))}
       </div>
-      {isMenu && (
-        <div>
-          <img src={menuFrame} className="menu-frame" />
+      <div className={`overlay ${isMenu ? "open" : ""}`}>
+        <div className="menuWrapper">
+          <img src={menuFrame} alt="menu" className="menuImage" />
+          <div className="menu-text">Pause</div>
+          <div className="menuButton">
+            <button className="button-inmenu" onClick={clickContinue}>
+              つづける
+            </button>
+            <button className="button-inmenu" onClick={clickStart}>
+              もういちど
+            </button>
+            <button className="button-inmenu" onClick={GotoSetting}>
+              設定へ
+            </button>
+            <button className="button-inmenu" onClick={GotoTitle}>
+              タイトルへ
+            </button>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
