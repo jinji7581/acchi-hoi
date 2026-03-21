@@ -1,40 +1,50 @@
 //矢印表示、共有変数に現在の矢印の向きを保存
 //もらえる引数...round
 //数と方向を決める⇒currentDirections[]、0,1,2,3(nullも)に入れる=>returnまで
+import { useEffect } from "react";
+import { useGameStore } from "../../../zustand";
 
-//矢印の数numberOfArrowsを定義(あとでなくせるからなくしてもいい)
-let numberOfArrows: number;
-let round: number = 1; //
+export const useGameLoop = () => {
+  const round = useGameStore((state) => state.round);
+  const currentDirections = useGameStore((state) => state.currentDirections);
+  // const increaseRound = useGameStore((state) => state.increaseRound);
+  // const decreaseRound = useGameStore((state) => state.decreaseRound);
+  // const setRound = useGameStore((state) => state.setRound);
 
-const directions = ["up", "down", "left", "right"] as const; //
-type Direction = (typeof directions)[number]; //
+  useEffect(() => {
+    let numberOfArrows: number;
 
-if (round <= 2) {
-  numberOfArrows = 1;
-} else if (round <= 6) {
-  numberOfArrows = 2;
-} else {
-  //round>=7はすべて3
-  numberOfArrows = 3;
-}
+    const directions = ["up", "down", "left", "right"] as const; //
+    //type Direction = (typeof directions)[number]; //
 
-//up,down,left,rightの並びをシャッフルした配列を返す(後から上からnumberOfArrows個を選んで抜き取る)
-function shuffle<T>(array: T[]): T[] {
-  const result = [...array];
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
-}
+    if (round <= 2) {
+      numberOfArrows = 1;
+    } else if (round <= 6) {
+      numberOfArrows = 2;
+    } else {
+      //round>=7はすべて3
+      numberOfArrows = 3;
+    }
 
-const shuffled = shuffle([...directions]);
-const selectedDirections = shuffled.slice(0, numberOfArrows);
-//
-const nulls = Array(4 - numberOfArrows).fill(null);
+    //up,down,left,rightの並びをシャッフルした配列を返す(後から上からnumberOfArrows個を選んで抜き取る)
+    function shuffle<T>(array: T[]): T[] {
+      const result = [...array];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
 
-const combined = [...selectedDirections, ...nulls];
+    const shuffled = shuffle([...directions]);
+    const selectedDirections = shuffled.slice(0, numberOfArrows);
+    //
+    const nulls = Array(4 - numberOfArrows).fill(null);
 
-const currentDirections = shuffle(combined);
+    const combined = [...selectedDirections, ...nulls];
 
-console.log("currentDirections", currentDirections);
+    const currentDirections = shuffle(combined);
+
+    console.log("currentDirections", currentDirections);
+  }, []);
+};
