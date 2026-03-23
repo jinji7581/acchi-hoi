@@ -34,7 +34,8 @@ const Play = () => {
   const currentDirections = useGameStore((state) => state.currentDirections);
   const playerCount = useGameStore((state) => state.playerCount);
   const isMaleCharacter = useGameStore((state) => state.isMaleCharacter);
-  const [round, setround] = useState<number>(1); //ゲームのラウンド
+  const round: number = useGameStore((state) => state.round); //ゲームのラウンド
+  const increaseRound = useGameStore((state) => state.increaseRound);
   const [timer, settimer] = useState<number>(0); //カウント
   const [gamePhase, setgamePhase] = useState<"waiting" | "arrow" | "judging">(
     "waiting",
@@ -109,8 +110,8 @@ const Play = () => {
       setgamePhase("waiting");
       console.log("waiting");
       settimer(0);
-      setround((prev) => prev + 1);
-      setcount_speed(round < 20 ? 600 - round * 30 : 100);
+      increaseRound();
+      setcount_speed(Math.max(600 - round * 30, 375));
     }
   }, [timer, gamePhase, round]);
 
