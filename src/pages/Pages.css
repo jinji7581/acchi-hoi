@@ -320,7 +320,7 @@ body,
 /* 判定表示エリアのスタイル */
 .judge-display-area {
   position: absolute; /*親要素(game-container)に対して絶対位置 */
-  bottom: 50px; /*画面の下から50pxの位置 */
+  top: 50px; /*画面の下から50pxの位置 */
   left: 0;
   right: 0;
   display: flex;

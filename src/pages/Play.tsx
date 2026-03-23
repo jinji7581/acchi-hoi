@@ -11,9 +11,9 @@ import p3w from "../assets/p3wN.png";
 import p3m from "../assets/p3mN.png";
 import p4w from "../assets/p4wN.png";
 import p4m from "../assets/p4mN.png";
-import menuButton from "../assets/menuButton.png"; //応急処置
+import menuButton from "../assets/menuButton.png";
 import menuFrame from "../assets/menuFrame.png";
-// import useGameLoop from "../features/game/hooks/useGameLoop";
+import { useGameLoop } from "../features/game/hooks/useGameLoop";
 const pnw = [p1w, p2w, p3w, p4w];
 const pnm = [p1m, p2m, p3m, p4m];
 
@@ -47,12 +47,12 @@ const Play = () => {
     navigate("/");
   };
 
-  // useGameLoop(round); //ここで矢印の方向を作る関数を呼び出す
+  useGameLoop(); //ここで矢印の方向を作る関数を呼び出す
 
   //時間関連の処理を隔離
 
   useEffect(() => {
-    setcount_speed(750 - round * 30); //テスト中
+    setcount_speed(750 - round * 30);
     if (timer === 4) {
       setgamePhase("arrow");
       console.log("arrow");
@@ -65,7 +65,7 @@ const Play = () => {
       setgamePhase("waiting");
       console.log("waiting");
       settimer(0);
-      setround((round) => round + 1);
+      setround((prev) => prev + 1);
       setcount_speed(round < 20 ? 600 - round * 30 : 100);
     }
   }, [timer, gamePhase, round]);

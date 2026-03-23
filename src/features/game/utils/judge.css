@@ -1,0 +1,6 @@
+.judgement {
+  list-style: none;
+  display: "flex";
+  gap: "15px";
+  padding: 0;
+}
