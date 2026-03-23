@@ -58,12 +58,15 @@ export const useGameLoop = () => {
       ];
     }
     if (14 < round) {
-      combined = [
-        ...selectedDirections,
-        selectedDirections[0],
-        ...selectedDirections,
-        selectedDirections[1],
-      ];
+      combined = [...selectedDirections, selectedDirections[0]];
+      combined = shuffle(combined);
+      combined = [...combined, combined[0]];
+      combined = shuffle(combined);
+      combined = [...combined, combined[0]];
+      combined = shuffle(combined);
+      combined = [...combined, combined[0]];
+      combined = shuffle(combined);
+      combined = [...combined, combined[0]];
     }
 
     const currentDirections = shuffle(combined);
