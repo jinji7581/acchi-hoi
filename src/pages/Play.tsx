@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Pages.css";
 import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../zustand";
@@ -11,11 +11,45 @@ import p3w from "../assets/p3wN.png";
 import p3m from "../assets/p3mN.png";
 import p4w from "../assets/p4wN.png";
 import p4m from "../assets/p4mN.png";
+import up_arrow from "../assets/up_arrow.png";
+import down_arrow from "../assets/down_arrow.png";
+import left_arrow from "../assets/left_arrow.png";
+import right_arrow from "../assets/right_arrow.png";
+import up_C from "../assets/up_C.png";
+import down_C from "../assets/down_C.png";
+import left_C from "../assets/left_C.png";
+import right_C from "../assets/right_C.png";
+import u_C from "../assets/u_c.png";
+import d_C from "../assets/d_c.png";
+import l_C from "../assets/l_c.png";
+import r_C from "../assets/r_c.png";
 import menuButton from "../assets/menuButton.png";
 import menuFrame from "../assets/menuFrame.png";
+import kaSound from "../assets/ka.mp3";
+import kanSound from "../assets/kan.mp3";
 import { useGameLoop } from "../features/game/hooks/useGameLoop";
 const pnw = [p1w, p2w, p3w, p4w];
 const pnm = [p1m, p2m, p3m, p4m];
+type Direction = "up" | "down" | "left" | "right" | "center";
+type DirectionC = `${Direction}c`;
+
+type ArrowKey = Direction | DirectionC;
+const arrowImages = {
+  up: up_arrow,
+  down: down_arrow,
+  left: left_arrow,
+  right: right_arrow,
+  upc: up_C,
+  downc: down_C,
+  leftc: left_C,
+  rightc: right_C,
+  upcmini: u_C,
+  downcmini: d_C,
+  leftcmini: l_C,
+  rightcmini: r_C,
+  center: p1w,
+  centerc: p1w,
+};
 
 const Play = () => {
   const currentDirections = useGameStore((state) => state.currentDirections);
@@ -23,12 +57,14 @@ const Play = () => {
   const isMaleCharacter = useGameStore((state) => state.isMaleCharacter);
   const round: number = useGameStore((state) => state.round); //ゲームのラウンド
   const increaseRound = useGameStore((state) => state.increaseRound);
+  const setRound = useGameStore((state) => state.setRound);
   const [timer, settimer] = useState<number>(0); //カウント
   const [gamePhase, setgamePhase] = useState<"waiting" | "arrow" | "judging">(
     "waiting",
   );
   const [count_speed, setcount_speed] = useState<number>(1000); //カウントの時間間隔
   const [isMenu, setIsMenu] = useState<boolean>(false);
+  const [addC, setAddC] = useState<string[]>(["", "", "", "", "", "", "", ""]);
 
   const clickMenu = () => {
     setIsMenu(true);
@@ -36,23 +72,62 @@ const Play = () => {
 
   const navigate = useNavigate();
   const clickContinue = () => {
+    settimer(10);
     setIsMenu(false);
   };
   const clickStart = () => {
+    setgamePhase("waiting");
+    setAddC(Array(8).fill(""));
+    settimer(0);
+    setRound(0);
     setIsMenu(false);
   };
   const GotoSetting = () => {
+    settimer(0);
     navigate("/Setup");
   };
   const GotoTitle = () => {
+    settimer(0);
     navigate("/");
   };
 
   useGameLoop(); //ここで矢印の方向を作る関数を呼び出す
 
   //時間関連の処理を隔離
+  const audioRefKa = useRef<HTMLAudioElement | null>(null);
+  const audioRefKan = useRef<HTMLAudioElement | null>(null);
+
+  const playSoundKa = () => {
+    if (!audioRefKa.current) {
+      audioRefKa.current = new Audio(kaSound);
+    }
+    audioRefKa.current.currentTime = 0;
+    audioRefKa.current.playbackRate = 1.0;
+    audioRefKa.current.play();
+  };
+  const playSoundKan = () => {
+    if (!audioRefKan.current) {
+      audioRefKan.current = new Audio(kanSound);
+    }
+    audioRefKan.current.currentTime = 0;
+    audioRefKan.current.play();
+  };
 
   useEffect(() => {
+    setcount_speed(Math.max(600 - round * 30, 375));
+    if (
+      timer === 0 ||
+      timer === 1 ||
+      timer === 2 ||
+      timer === 4 ||
+      timer === 5 ||
+      timer === 6
+    ) {
+      playSoundKa();
+    }
+    if (timer === 3 || timer === 7) {
+      playSoundKan();
+    }
     if (timer === 4) {
       setgamePhase("arrow");
       console.log("arrow");
@@ -66,9 +141,29 @@ const Play = () => {
       console.log("waiting");
       settimer(0);
       increaseRound();
-      setcount_speed(Math.max(600 - round * 30, 375));
     }
   }, [timer, gamePhase, round, increaseRound]);
+  
+  useEffect(() => {
+    if (round > 16) {
+      setAddC(Array(8).fill("c"));
+    }
+    if (round > 20) {
+      setAddC(Array(8).fill("cmini"));
+    }
+    if (round > 25) {
+      const choices = ["", "c", "cmini"];
+
+      const newArray = [];
+
+      for (let i = 0; i < 8; i++) {
+        const randomIndex = Math.floor(Math.random() * choices.length);
+        newArray.push(choices[randomIndex]);
+      }
+
+      setAddC(newArray);
+    }
+  }, [round]);
 
   useEffect(() => {
     //メニューを開いたとき以外はタイマーを動かし続ける
@@ -97,26 +192,95 @@ const Play = () => {
       <div className="judge-display-area">
         {gamePhase === "judging" && <Judge />}
       </div>
-      <div className="arrow_up">
-        {gamePhase === "arrow" && (
-          <img src={currentDirections[0] + "_arrow"} alt="うえ" />
-        )}
-      </div>
-      <div className="arrow_right">
-        {gamePhase === "arrow" && (
-          <img src={currentDirections[1] + "_arrow"} alt="みぎ" />
-        )}
-      </div>
-      <div className="arrow_down">
-        {gamePhase === "arrow" && (
-          <img src={currentDirections[2] + "_arrow"} alt="した" />
-        )}
-      </div>
-      <div className="arrow_left">
-        {gamePhase === "arrow" && (
-          <img src={currentDirections[3] + "_arrow"} alt="ひだり" />
-        )}
-      </div>
+      {gamePhase === "arrow" && !isMenu && (
+        <>
+          <div className="arrow_up">
+            {currentDirections[0] !== null && (
+              <img
+                className="arroww"
+                src={arrowImages[(currentDirections[0] + addC[0]) as ArrowKey]}
+                alt="うえ"
+              />
+            )}
+          </div>
+          <div className="arrow_right">
+            {currentDirections[1] !== null && (
+              <img
+                className="arroww"
+                src={arrowImages[(currentDirections[1] + addC[1]) as ArrowKey]}
+                alt="みぎ"
+              />
+            )}
+          </div>
+          <div className="arrow_down">
+            {currentDirections[2] !== null && (
+              <img
+                className="arroww"
+                src={arrowImages[(currentDirections[2] + addC[2]) as ArrowKey]}
+                alt="した"
+              />
+            )}
+          </div>
+          <div className="arrow_left">
+            {currentDirections[3] !== null && (
+              <img
+                className="arroww"
+                src={arrowImages[(currentDirections[3] + addC[3]) as ArrowKey]}
+                alt="ひだり"
+              />
+            )}
+          </div>
+          {round > 12 && (
+            <>
+              <div className="arrow_upleft">
+                {currentDirections[4] !== null && (
+                  <img
+                    className="arroww"
+                    src={
+                      arrowImages[(currentDirections[4] + addC[4]) as ArrowKey]
+                    }
+                    alt="うえ"
+                  />
+                )}
+              </div>
+              <div className="arrow_upright">
+                {currentDirections[5] !== null && (
+                  <img
+                    className="arroww"
+                    src={
+                      arrowImages[(currentDirections[5] + addC[5]) as ArrowKey]
+                    }
+                    alt="みぎ"
+                  />
+                )}
+              </div>
+              <div className="arrow_downleft">
+                {currentDirections[6] !== null && (
+                  <img
+                    className="arroww"
+                    src={
+                      arrowImages[(currentDirections[6] + addC[6]) as ArrowKey]
+                    }
+                    alt="した"
+                  />
+                )}
+              </div>
+              <div className="arrow_downright">
+                {currentDirections[7] !== null && (
+                  <img
+                    className="arroww"
+                    src={
+                      arrowImages[(currentDirections[7] + addC[7]) as ArrowKey]
+                    }
+                    alt="ひだり"
+                  />
+                )}
+              </div>
+            </>
+          )}
+        </>
+      )}
+
       <div className="count">
         {gamePhase === "waiting" && timer !== 4 && <>{3 - timer}</>}
       </div>
