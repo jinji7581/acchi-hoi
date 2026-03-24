@@ -142,7 +142,8 @@ const Play = () => {
       settimer(0);
       increaseRound();
     }
-  }, [timer, gamePhase, round]);
+  }, [timer, gamePhase, round, increaseRound]);
+  
   useEffect(() => {
     if (round > 16) {
       setAddC(Array(8).fill("c"));
