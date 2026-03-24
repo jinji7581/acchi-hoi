@@ -75,6 +75,9 @@ body,
   display: flex;
   top: 20%;
   left: 50%;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
   transform: translate(-50%, -50%);
   font-size: 48px;
   color: black;
@@ -86,6 +89,9 @@ body,
   display: flex;
   top: 40%;
   left: 50%;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
   transform: translate(-50%, -50%);
   font-size: 48px;
   color: black;
@@ -97,6 +103,9 @@ body,
   display: flex;
   top: 60%;
   left: 50%;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
   transform: translate(-50%, -50%);
   font-size: 48px;
   color: black;
