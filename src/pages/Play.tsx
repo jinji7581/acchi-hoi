@@ -58,6 +58,8 @@ const Play = () => {
   const round: number = useGameStore((state) => state.round); //ゲームのラウンド
   const increaseRound = useGameStore((state) => state.increaseRound);
   const setRound = useGameStore((state) => state.setRound);
+  const scores = useGameStore((state) => state.scores);
+  const lives = useGameStore((state) => state.lives);
   const [timer, settimer] = useState<number>(0); //カウント
   const [gamePhase, setgamePhase] = useState<"waiting" | "arrow" | "judging">(
     "waiting",
@@ -143,7 +145,7 @@ const Play = () => {
       increaseRound();
     }
   }, [timer, gamePhase, round, increaseRound]);
-  
+
   useEffect(() => {
     if (round > 16) {
       setAddC(Array(8).fill("c"));
@@ -191,6 +193,13 @@ const Play = () => {
       </div>
       <div className="judge-display-area">
         {gamePhase === "judging" && <Judge />}
+      </div>
+      <div className="point">
+        {scores.slice(0, playerCount).map((score, index) => (
+          <div key={index} className={`player-${index}`}>
+            {score}pt
+          </div>
+        ))}
       </div>
       {gamePhase === "arrow" && !isMenu && (
         <>
