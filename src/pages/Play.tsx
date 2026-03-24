@@ -4,14 +4,46 @@ import "./Pages.css";
 import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../zustand";
 import Judge from "../features/game/utils/judge";
-import p1w from "../assets/p1wN.png";
-import p1m from "../assets/p1mN.png";
-import p2w from "../assets/p2wN.png";
-import p2m from "../assets/p2mN.png";
-import p3w from "../assets/p3wN.png";
-import p3m from "../assets/p3mN.png";
-import p4w from "../assets/p4wN.png";
-import p4m from "../assets/p4mN.png";
+import p1wN from "../assets/p1wN.png";
+import p1mN from "../assets/p1mN.png";
+import p2wN from "../assets/p2wN.png";
+import p2mN from "../assets/p2mN.png";
+import p3wN from "../assets/p3wN.png";
+import p3mN from "../assets/p3mN.png";
+import p4wN from "../assets/p4wN.png";
+import p4mN from "../assets/p4mN.png";
+import p1wR from "../assets/p1wR.png";
+import p1mR from "../assets/p1mR.png";
+import p2wR from "../assets/p2wR.png";
+import p2mR from "../assets/p2mR.png";
+import p3wR from "../assets/p3wR.png";
+import p3mR from "../assets/p3mR.png";
+import p4wR from "../assets/p4wR.png";
+import p4mR from "../assets/p4mR.png";
+import p1wL from "../assets/p1wL.png";
+import p1mL from "../assets/p1mL.png";
+import p2wL from "../assets/p2wL.png";
+import p2mL from "../assets/p2mL.png";
+import p3wL from "../assets/p3wL.png";
+import p3mL from "../assets/p3mL.png";
+import p4wL from "../assets/p4wL.png";
+import p4mL from "../assets/p4mL.png";
+import p1wU from "../assets/p1wU.png";
+import p1mU from "../assets/p1mU.png";
+import p2wU from "../assets/p2wU.png";
+import p2mU from "../assets/p2mU.png";
+import p3wU from "../assets/p3wU.png";
+import p3mU from "../assets/p3mU.png";
+import p4wU from "../assets/p4wU.png";
+import p4mU from "../assets/p4mU.png";
+import p1wD from "../assets/p1wD.png";
+import p1mD from "../assets/p1mD.png";
+import p2wD from "../assets/p2wD.png";
+import p2mD from "../assets/p2mD.png";
+import p3wD from "../assets/p3wD.png";
+import p3mD from "../assets/p3mD.png";
+import p4wD from "../assets/p4wD.png";
+import p4mD from "../assets/p4mD.png";
 import up_arrow from "../assets/up_arrow.png";
 import down_arrow from "../assets/down_arrow.png";
 import left_arrow from "../assets/left_arrow.png";
@@ -29,8 +61,13 @@ import menuFrame from "../assets/menuFrame.png";
 import kaSound from "../assets/ka.mp3";
 import kanSound from "../assets/kan.mp3";
 import { useGameLoop } from "../features/game/hooks/useGameLoop";
-const pnw = [p1w, p2w, p3w, p4w];
-const pnm = [p1m, p2m, p3m, p4m];
+const playerImages = {
+  center: { m: [p1mN, p2mN, p3mN, p4mN], w: [p1wN, p2wN, p3wN, p4wN] },
+  right: { m: [p1mR, p2mR, p3mR, p4mR], w: [p1wR, p2wR, p3wR, p4wR] },
+  left: { m: [p1mL, p2mL, p3mL, p4mL], w: [p1wL, p2wL, p3wL, p4wL] },
+  up: { m: [p1mU, p2mU, p3mU, p4mU], w: [p1wU, p2wU, p3wU, p4wU] },
+  down: { m: [p1mD, p2mD, p3mD, p4mD], w: [p1wD, p2wD, p3wD, p4wD] },
+};
 type Direction = "up" | "down" | "left" | "right" | "center";
 type DirectionC = `${Direction}c`;
 
@@ -48,12 +85,13 @@ const arrowImages = {
   downcmini: d_C,
   leftcmini: l_C,
   rightcmini: r_C,
-  center: p1w,
-  centerc: p1w,
+  center: p1wN,
+  centerc: p1wN,
 };
 
 const Play = () => {
   const currentDirections = useGameStore((state) => state.currentDirections);
+  const playerDirections = useGameStore((state) => state.playerDirections);
   const playerCount = useGameStore((state) => state.playerCount);
   const isMaleCharacter = useGameStore((state) => state.isMaleCharacter);
   const round: number = useGameStore((state) => state.round); //ゲームのラウンド
@@ -206,7 +244,11 @@ const Play = () => {
         {Array.from({ length: playerCount }).map((_, i) => (
           <div className="play-chara-packet-content" key={i}>
             <img
-              src={isMaleCharacter[i] ? pnm[i] : pnw[i]}
+              src={
+                playerImages[playerDirections[i] as keyof typeof playerImages][
+                  isMaleCharacter[i] ? "m" : "w"
+                ][i]
+              }
               className="play-image"
             />
           </div>
