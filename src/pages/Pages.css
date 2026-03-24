@@ -332,6 +332,31 @@ body,
   height: auto;
 }
 
+.point {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  gap: 200px;
+  flex-direction: row;
+  display: flex;
+  transform: translate(-50%, 0%);
+  font-size: 48px;
+  font-weight: bold;
+  -webkit-text-stroke: 0.02em #000000;
+}
+.player-0 {
+  color: red;
+}
+.player-1 {
+  color: rgb(0, 183, 255);
+}
+.player-2 {
+  color: yellow;
+}
+.player-3 {
+  color: rgb(119, 255, 0);
+}
+
 /* 判定表示エリアのスタイル */
 .judge-display-area {
   position: absolute;
