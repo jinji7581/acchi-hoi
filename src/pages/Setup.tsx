@@ -1,4 +1,4 @@
-// import React, { useState, useEffect } from "react";
+import React, { useRef } from "react";
 import "./Pages.css";
 // import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../zustand";
@@ -7,6 +7,8 @@ import left_arrow from "../assets/left_arrow.png";
 import right_arrow from "../assets/right_arrow.png";
 import left_C from "../assets/left_C.png";
 import right_C from "../assets/right_C.png";
+import Abutton from "../assets/buttonA.mp3";
+import Bbutton from "../assets/buttonD.mp3";
 
 const Setup: React.FC = () => {
   // グローバル変数
@@ -29,36 +31,62 @@ const Setup: React.FC = () => {
 
   const navigate = useNavigate();
   const clickBack = () => {
+    playSoundA();
     navigate("/");
   };
   const clickStart = () => {
+    playSoundB();
     setRound(1);
     navigate(showingCharacter ? "/SetChara" : "/Play");
   };
 
   // 変数の変動処理
   const decreaseNumber = () => {
+    playSoundA();
     if (playerCount > 1) {
       decreasePlayerCount();
     }
   };
   const increaseNumber = () => {
+    playSoundA();
     if (playerCount < 4) {
       increasePlayerCount();
     }
   };
   const modeTrue = () => {
+    playSoundA();
     setShowingCharacter(true);
   };
   const modeFalse = () => {
+    playSoundA();
     setShowingCharacter(false);
   };
   const pointTrue = () => {
+    playSoundA();
     setIsPointSystem(true);
   };
   const pointFalse = () => {
+    playSoundA();
     setIsPointSystem(false);
   };
+
+  const audioRefA = useRef<HTMLAudioElement | null>(null);
+  const playSoundA = () => {
+    if (!audioRefA.current) {
+      audioRefA.current = new Audio(Abutton);
+    }
+    audioRefA.current.currentTime = 0;
+    audioRefA.current.play();
+  };
+  const audioRefB = useRef<HTMLAudioElement | null>(null);
+  const playSoundB = () => {
+    if (!audioRefB.current) {
+      audioRefB.current = new Audio(Bbutton);
+    }
+    audioRefB.current.currentTime = 0;
+    audioRefB.current.play();
+  };
+
   return (
     <div className="game-container">
       <div className="back"></div>

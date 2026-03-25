@@ -1,4 +1,4 @@
-// import React, { useState, useEffect } from "react";
+import React, { useRef } from "react";
 import "./Pages.css";
 // import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../zustand";
@@ -15,6 +15,8 @@ import left_arrow from "../assets/left_arrow.png";
 import right_arrow from "../assets/right_arrow.png";
 import left_C from "../assets/left_C.png";
 import right_C from "../assets/right_C.png";
+import Abutton from "../assets/buttonA.mp3";
+import Bbutton from "../assets/buttonD.mp3";
 const pnw = [p1w, p2w, p3w, p4w];
 const pnm = [p1m, p2m, p3m, p4m];
 
@@ -27,18 +29,39 @@ const SetChara: React.FC = () => {
 
   const navigate = useNavigate();
   const clickBack = () => {
+    playSoundA();
     navigate("/Setup");
   };
   const clickStart = () => {
+    playSoundB();
     navigate("/Play");
   };
 
   // 変数の変動処理
   const clickLeft = (n: number) => {
+    playSoundA();
     setIsMaleCharacter(n - 1, true);
   };
   const clickRight = (n: number) => {
+    playSoundA();
     setIsMaleCharacter(n - 1, false);
+  };
+
+  const audioRefA = useRef<HTMLAudioElement | null>(null);
+  const playSoundA = () => {
+    if (!audioRefA.current) {
+      audioRefA.current = new Audio(Abutton);
+    }
+    audioRefA.current.currentTime = 0;
+    audioRefA.current.play();
+  };
+  const audioRefB = useRef<HTMLAudioElement | null>(null);
+  const playSoundB = () => {
+    if (!audioRefB.current) {
+      audioRefB.current = new Audio(Bbutton);
+    }
+    audioRefB.current.currentTime = 0;
+    audioRefB.current.play();
   };
   return (
     <div className="game-container">
