@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import { useGameStore } from "../../../zustand";
 import { type Direction } from "../../../zustand";
@@ -6,8 +6,8 @@ import { type Direction } from "../../../zustand";
 const useDirection = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   //   const [directions, setDirections] = useState<string[]>(["無", "無", "無"]);
-  //   const [sayuu, setSayuu] = useState<number[]>([0, 0, 0]);
-  //   const [joge, setJoge] = useState<number[]>([0, 0, 0]);
+  const [sayuu, setSayuu] = useState<number[]>([0, 0, 0]);
+  const [joge, setJoge] = useState<number[]>([0, 0, 0]);
   //   const cameraDirections = useGameStore((state) => state.cameraDirections);
   const setCameraDirections = useGameStore(
     (state) => state.setCameraDirections,
@@ -16,7 +16,6 @@ const useDirection = () => {
   useEffect(() => {
     let faceLandmarker: FaceLandmarker;
     let animationFrameId: number;
-    // console.log("AIAIAIAIAI");
     const setUpDetector = async () => {
       //モデルの初期化
       const vision = await FilesetResolver.forVisionTasks(
@@ -33,8 +32,8 @@ const useDirection = () => {
         numFaces: 3, // 検出人数をに設定
       });
       startCamera();
+      console.log("初期化完了");
     };
-
     const startCamera = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -94,7 +93,6 @@ const useDirection = () => {
 
             // 計算したエリア（インデックス）の方向を上書き
             setCameraDirections(sectorIndex, dir);
-            console.log(dir);
 
             newJoges[sectorIndex] = pitch;
             newSayuus[sectorIndex] = yaw;

@@ -274,7 +274,7 @@ const Play = () => {
       if (!isMenu) {
         settimer((prev) => prev + 1);
       }
-    }, count_speed);
+    }, 2000);
     return () => clearInterval(intervalId);
   }, [count_speed, isMenu]);
 
