@@ -1,7 +1,9 @@
-// import React, { useState, useEffect } from "react";
+import React, { useRef } from "react";
 import "./Pages.css";
 import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../zustand";
+import Abutton from "../assets/buttonA.mp3";
+import Bbutton from "../assets/buttonD.mp3";
 
 const Result: React.FC = () => {
   const playerCount = useGameStore((state) => state.playerCount);
@@ -17,6 +19,7 @@ const Result: React.FC = () => {
   const sortedIndices = indexedScores.map((item) => item.index);
 
   const clickStart = () => {
+    playSoundA();
     for (let i = 0; i < playerCount; i++) {
       setScore(i, 0);
       setLifes(i, 3);
@@ -25,6 +28,7 @@ const Result: React.FC = () => {
     navigate("/Play");
   };
   const GotoSetting = () => {
+    playSoundA();
     for (let i = 0; i < playerCount; i++) {
       setScore(i, 0);
       setLifes(i, 3);
@@ -33,12 +37,29 @@ const Result: React.FC = () => {
     navigate("/Setup");
   };
   const GotoTitle = () => {
+    playSoundB();
     for (let i = 0; i < playerCount; i++) {
       setScore(i, 0);
       setLifes(i, 3);
     }
     setRound(1);
     navigate("/");
+  };
+  const audioRefA = useRef<HTMLAudioElement | null>(null);
+  const playSoundA = () => {
+    if (!audioRefA.current) {
+      audioRefA.current = new Audio(Abutton);
+    }
+    audioRefA.current.currentTime = 0;
+    audioRefA.current.play();
+  };
+  const audioRefB = useRef<HTMLAudioElement | null>(null);
+  const playSoundB = () => {
+    if (!audioRefB.current) {
+      audioRefB.current = new Audio(Bbutton);
+    }
+    audioRefB.current.currentTime = 0;
+    audioRefB.current.play();
   };
   return (
     <div className="game-container">
