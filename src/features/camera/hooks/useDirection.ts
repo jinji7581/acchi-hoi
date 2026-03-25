@@ -64,7 +64,7 @@ const useDirection = () => {
       setCameraDirections(0, null);
       setCameraDirections(1, null);
       setCameraDirections(2, null);
-      if (results.faceLandmarks && results.faceLandmarks.length > 0) {
+      if (results.faceLandmarks.length > 0) {
         results.faceLandmarks.forEach((landmarks, index) => {
           // 顔の基準点として鼻の頭付近のX座標を取得 (0.0 〜 1.0)
           const faceX = landmarks[1].x;
@@ -85,7 +85,6 @@ const useDirection = () => {
           if (matrix) {
             const yaw = matrix[2];
             const pitch = matrix[6];
-
             let dir: Direction = "center";
             // ※閾値はまた決める
             if (yaw > 0.4) dir = "right";
@@ -95,6 +94,7 @@ const useDirection = () => {
 
             // 計算したエリア（インデックス）の方向を上書き
             setCameraDirections(sectorIndex, dir);
+            console.log(dir);
 
             newJoges[sectorIndex] = pitch;
             newSayuus[sectorIndex] = yaw;
@@ -102,8 +102,8 @@ const useDirection = () => {
         });
       }
 
-      //   setSayuu(newSayuus);
-      //   setJoge(newJoges);
+      setSayuu(newSayuus);
+      setJoge(newJoges);
       animationFrameId = requestAnimationFrame(predictWebcam);
     };
     setUpDetector();
@@ -117,6 +117,7 @@ const useDirection = () => {
       }
     };
   }, []);
+  return { videoRef };
 };
 
 export default useDirection;

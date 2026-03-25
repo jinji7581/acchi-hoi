@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useGameStore } from "../../../zustand";
+import type { Direction } from "../../../zustand";
 
 export const useDirectConverter = () => {
   const [token, setToken] = useState<boolean[]>([true, true, true, true]);
@@ -9,7 +10,14 @@ export const useDirectConverter = () => {
   const cameraDirections = useGameStore((state) => state.cameraDirections);
   const playerCount = useGameStore((state) => state.playerCount);
   const phase = useGameStore((state) => state.phase);
+  const playerDirections = useGameStore((state) => state.playerDirections);
   const [timer, setTimer] = useState<number[]>([0, 0, 0, 0]);
+  const [preDirections, setPreDirections] = useState<Direction[]>([
+    "center",
+    "center",
+    "center",
+    "center",
+  ]);
 
   useEffect(() => {
     if (phase === "waiting") {
@@ -20,9 +28,21 @@ export const useDirectConverter = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTimer((prev) => [prev[0] + 1, prev[1] + 1, prev[2] + 1, prev[3] + 1]);
-    });
-    return clearInterval(intervalId);
-  }, []);
+      console.log(timer);
+    }, 200);
+    return () => clearInterval(intervalId);
+  }, [cameraDirections]);
+
+  useEffect(() => {
+    if (phase === "waiting") {
+      setPreDirections([
+        cameraDirections[0],
+        cameraDirections[1],
+        cameraDirections[2],
+        cameraDirections[3],
+      ]);
+    }
+  }, [timer, phase]);
 
   useEffect(() => {
     setTimer((prev) => [0, prev[1], prev[2], prev[3]]);
@@ -41,7 +61,7 @@ export const useDirectConverter = () => {
     if (phase === "arrow") {
       const math: boolean[] = [true, true, true, true];
       for (let i = 0; i < playerCount; i++) {
-        if (timer[i] > 1) {
+        if (timer[i] > 1 && cameraDirections[i] !== preDirections[i]) {
           math[i] = false;
         } else {
           math[i] = token[i];
@@ -53,6 +73,8 @@ export const useDirectConverter = () => {
 
   useEffect(() => {
     for (let i = 0; i < playerCount; i++) {
+      // console.log(cameraDirections);
+      // console.log(playerDirections);
       if ((token[i] || phase !== "arrow") && cameraDirections[i] !== null) {
         setplayerDirections(i, cameraDirections[i]);
       }

@@ -63,8 +63,8 @@ import kanSound from "../assets/kan.mp3";
 import Abutton from "../assets/buttonA.mp3";
 import { useGameLoop } from "../features/game/hooks/useGameLoop";
 import type { phase } from "../zustand";
-import useDirection from "../features/camera/hooks/useDirection";
 import { useDirectConverter } from "../features/camera/hooks/useDirectConverter";
+import useDirection from "../features/camera/hooks/useDirection";
 const playerImages = {
   center: { m: [p1mN, p2mN, p3mN, p4mN], w: [p1wN, p2wN, p3wN, p4wN] },
   right: { m: [p1mR, p2mR, p3mR, p4mR], w: [p1wR, p2wR, p3wR, p4wR] },
@@ -166,6 +166,7 @@ const Play = () => {
   useGameLoop(); //ここで矢印の方向を作る関数を呼び出す
   useInterface(); //ここでキー操作の関数を呼び出す
 
+  const { videoRef } = useDirection();
   useDirectConverter(); //AI
 
   //時間関連の処理を隔離
@@ -396,6 +397,9 @@ const Play = () => {
           )}
         </>
       )}
+      <div>
+        <video ref={videoRef} muted playsInline autoPlay />
+      </div>
 
       <div className="count">
         {phase === "waiting" && timer !== 4 && !isMenu && <>{3 - timer}</>}
