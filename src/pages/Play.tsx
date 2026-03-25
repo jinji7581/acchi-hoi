@@ -60,6 +60,7 @@ import menuButton from "../assets/menuButton.png";
 import menuFrame from "../assets/menuFrame.png";
 import kaSound from "../assets/ka.mp3";
 import kanSound from "../assets/kan.mp3";
+import Abutton from "../assets/buttonA.mp3";
 import { useGameLoop } from "../features/game/hooks/useGameLoop";
 import type { phase } from "../zustand";
 const playerImages = {
@@ -113,16 +114,19 @@ const Play = () => {
   const [addC, setAddC] = useState<string[]>(["", "", "", "", "", "", "", ""]);
 
   const clickMenu = () => {
+    playSoundA();
     setIsMenu(true);
   };
 
   const navigate = useNavigate();
   const clickContinue = () => {
+    playSoundA();
     settimer(10);
     setIsMenu(false);
   };
   const clickStart = () => {
     setPhase("waiting");
+    playSoundA();
     setAddC(Array(8).fill(""));
     settimer(0);
     setRound(1);
@@ -133,6 +137,7 @@ const Play = () => {
     setIsMenu(false);
   };
   const GotoSetting = () => {
+    playSoundA();
     settimer(0);
     for (let i = 0; i < playerCount; i++) {
       setScore(i, 0);
@@ -142,6 +147,7 @@ const Play = () => {
     navigate("/Setup");
   };
   const GotoTitle = () => {
+    playSoundA();
     settimer(0);
     for (let i = 0; i < playerCount; i++) {
       setScore(i, 0);
@@ -157,6 +163,7 @@ const Play = () => {
   //時間関連の処理を隔離
   const audioRefKa = useRef<HTMLAudioElement | null>(null);
   const audioRefKan = useRef<HTMLAudioElement | null>(null);
+  const audioRefA = useRef<HTMLAudioElement | null>(null);
 
   const playSoundKa = () => {
     if (!audioRefKa.current) {
@@ -172,6 +179,13 @@ const Play = () => {
     }
     audioRefKan.current.currentTime = 0;
     audioRefKan.current.play();
+  };
+  const playSoundA = () => {
+    if (!audioRefA.current) {
+      audioRefA.current = new Audio(Abutton);
+    }
+    audioRefA.current.currentTime = 0;
+    audioRefA.current.play();
   };
 
   useEffect(() => {

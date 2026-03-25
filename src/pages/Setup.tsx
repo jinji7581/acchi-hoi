@@ -1,8 +1,14 @@
-// import React, { useState, useEffect } from "react";
+import React, { useRef } from "react";
 import "./Pages.css";
 // import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../zustand";
 import { useNavigate } from "react-router-dom";
+import left_arrow from "../assets/left_arrow.png";
+import right_arrow from "../assets/right_arrow.png";
+import left_C from "../assets/left_C.png";
+import right_C from "../assets/right_C.png";
+import Abutton from "../assets/buttonA.mp3";
+import Bbutton from "../assets/buttonD.mp3";
 
 const Setup: React.FC = () => {
   // グローバル変数
@@ -25,56 +31,84 @@ const Setup: React.FC = () => {
 
   const navigate = useNavigate();
   const clickBack = () => {
+    playSoundA();
     navigate("/");
   };
   const clickStart = () => {
+    playSoundB();
     setRound(1);
     navigate(showingCharacter ? "/SetChara" : "/Play");
   };
 
   // 変数の変動処理
   const decreaseNumber = () => {
+    playSoundA();
     if (playerCount > 1) {
       decreasePlayerCount();
     }
   };
   const increaseNumber = () => {
+    playSoundA();
     if (playerCount < 4) {
       increasePlayerCount();
     }
   };
   const modeTrue = () => {
+    playSoundA();
     setShowingCharacter(true);
   };
   const modeFalse = () => {
+    playSoundA();
     setShowingCharacter(false);
   };
   const pointTrue = () => {
+    playSoundA();
     setIsPointSystem(true);
   };
   const pointFalse = () => {
+    playSoundA();
     setIsPointSystem(false);
   };
+
+  const audioRefA = useRef<HTMLAudioElement | null>(null);
+  const playSoundA = () => {
+    if (!audioRefA.current) {
+      audioRefA.current = new Audio(Abutton);
+    }
+    audioRefA.current.currentTime = 0;
+    audioRefA.current.play();
+  };
+  const audioRefB = useRef<HTMLAudioElement | null>(null);
+  const playSoundB = () => {
+    if (!audioRefB.current) {
+      audioRefB.current = new Audio(Bbutton);
+    }
+    audioRefB.current.currentTime = 0;
+    audioRefB.current.play();
+  };
+
   return (
     <div className="game-container">
       <div className="back"></div>
       <div className="setup1">
-        <div>参加人数</div>
-        <div onClick={decreaseNumber}>◀</div>
-        <div>{playerCount}</div>
-        <div onClick={increaseNumber}>▶</div>
+        <div>参加人数　　</div>
+        <img src={left_arrow} onClick={decreaseNumber} className="triangle" />
+        <div className="setup-text">{playerCount}</div>
+        <img src={right_arrow} onClick={increaseNumber} className="triangle" />
       </div>
       <div className="setup2">
-        <div>表示モード</div>
-        <div onClick={modeTrue}>◀</div>
-        <div>{showingCharacter ? "キャラ" : "映像"}</div>
-        <div onClick={modeFalse}>▶</div>
+        <div>表示モード　</div>
+        <img src={left_arrow} onClick={modeTrue} className="triangle" />
+        <div className="setup-text">{showingCharacter ? "キャラ" : "映像"}</div>
+        <img src={right_arrow} onClick={modeFalse} className="triangle" />
       </div>
       <div className="setup3">
         <div>ゲームモード</div>
-        <div onClick={pointTrue}>◀</div>
-        <div>{isPointSystem ? "ポイント制" : "残機制"}</div>
-        <div onClick={pointFalse}>▶</div>
+        <img src={left_arrow} onClick={pointTrue} className="triangle" />
+        <div className="setup-text">
+          {isPointSystem ? "ポイント制" : "残機制"}
+        </div>
+        <img src={right_arrow} onClick={pointFalse} className="triangle" />
       </div>
       <button className="back-button" onClick={clickBack}>
         戻る

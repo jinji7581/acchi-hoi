@@ -14,6 +14,7 @@ type gameState = {
   currentDirections: Direction[];
   playerDirections: Direction[];
   phase: phase;
+  cameraDirections: Direction[];
   increasePlayerCount: () => void;
   decreasePlayerCount: () => void;
   setPlayerCount: (c: number) => void;
@@ -32,6 +33,7 @@ type gameState = {
   setCurrentDirections: (index: number, value: Direction) => void;
   setPlayerDirections: (index: number, value: Direction) => void;
   setPhase: (c: phase) => void;
+  setCameraDirections: (index: number, value: Direction) => void;
 };
 
 export const useGameStore = create<gameState>((set) => ({
@@ -122,6 +124,13 @@ export const useGameStore = create<gameState>((set) => ({
 
   phase: "waiting",
   setPhase: (c: phase) => set({ phase: c }),
+  cameraDirections: ["center", "center", "center"],
+  setCameraDirections: (index: number, value: Direction) =>
+    set((state) => ({
+      cameraDirections: state.cameraDirections.map((l, i) =>
+        i === index ? value : l,
+      ),
+    })),
 }));
 
 // まだやって無ければターミナルでnpm install zustandを実行する。

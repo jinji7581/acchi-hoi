@@ -1,4 +1,4 @@
-// import React, { useState, useEffect } from "react";
+import React, { useRef } from "react";
 import "./Pages.css";
 // import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../zustand";
@@ -11,6 +11,12 @@ import p3w from "../assets/p3wN.png";
 import p3m from "../assets/p3mN.png";
 import p4w from "../assets/p4wN.png";
 import p4m from "../assets/p4mN.png";
+import left_arrow from "../assets/left_arrow.png";
+import right_arrow from "../assets/right_arrow.png";
+import left_C from "../assets/left_C.png";
+import right_C from "../assets/right_C.png";
+import Abutton from "../assets/buttonA.mp3";
+import Bbutton from "../assets/buttonD.mp3";
 const pnw = [p1w, p2w, p3w, p4w];
 const pnm = [p1m, p2m, p3m, p4m];
 
@@ -23,18 +29,39 @@ const SetChara: React.FC = () => {
 
   const navigate = useNavigate();
   const clickBack = () => {
+    playSoundA();
     navigate("/Setup");
   };
   const clickStart = () => {
+    playSoundB();
     navigate("/Play");
   };
 
   // 変数の変動処理
   const clickLeft = (n: number) => {
+    playSoundA();
     setIsMaleCharacter(n - 1, true);
   };
   const clickRight = (n: number) => {
+    playSoundA();
     setIsMaleCharacter(n - 1, false);
+  };
+
+  const audioRefA = useRef<HTMLAudioElement | null>(null);
+  const playSoundA = () => {
+    if (!audioRefA.current) {
+      audioRefA.current = new Audio(Abutton);
+    }
+    audioRefA.current.currentTime = 0;
+    audioRefA.current.play();
+  };
+  const audioRefB = useRef<HTMLAudioElement | null>(null);
+  const playSoundB = () => {
+    if (!audioRefB.current) {
+      audioRefB.current = new Audio(Bbutton);
+    }
+    audioRefB.current.currentTime = 0;
+    audioRefB.current.play();
   };
   return (
     <div className="game-container">
@@ -44,16 +71,20 @@ const SetChara: React.FC = () => {
         {Array.from({ length: playerCount }).map((_, i) => (
           <div className="chara-packet-content" key={i}>
             <div className="chara-packet">
-              <div className="triangle" onClick={() => clickLeft(i + 1)}>
-                ◀
-              </div>
+              <img
+                src={left_arrow}
+                className="triangle"
+                onClick={() => clickLeft(i + 1)}
+              />
               <img
                 src={isMaleCharacter[i] ? pnm[i] : pnw[i]}
                 className="image"
               />
-              <div className="triangle" onClick={() => clickRight(i + 1)}>
-                ▶
-              </div>
+              <img
+                src={right_arrow}
+                className="triangle"
+                onClick={() => clickRight(i + 1)}
+              />
             </div>
             <div className="iplayer">{i + 1}p</div>
           </div>

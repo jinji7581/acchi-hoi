@@ -1,17 +1,28 @@
-import React /*, { useState, useEffect } */ from "react";
+import React, { useRef } from "react";
 import "./Pages.css";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/titleLogo.png";
+import Bbutton from "../assets/buttonS.mp3";
 
 const Title: React.FC = () => {
   const navigate = useNavigate();
   const clickStart = () => {
+    playSoundB();
     navigate("/Setup");
+  };
+  const audioRefB = useRef<HTMLAudioElement | null>(null);
+  const playSoundB = () => {
+    if (!audioRefB.current) {
+      audioRefB.current = new Audio(Bbutton);
+    }
+    audioRefB.current.currentTime = 0;
+    audioRefB.current.play();
   };
 
   return (
     <div className="game-container">
       <div className="back"></div>
-      <div className="title-title">あっちむくなホイ！</div>
+      <img src={logo} className="title-logo" />
       <button className="title-start-button" onClick={clickStart}>
         Start
       </button>
