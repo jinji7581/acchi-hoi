@@ -13,7 +13,6 @@ const useDirection = () => {
   const setCameraDirections = useGameStore(
     (state) => state.setCameraDirections,
   );
-  const playerCount = useGameStore((state) => state.playerCount);
 
   useEffect(() => {
     let faceLandmarker: FaceLandmarker;
