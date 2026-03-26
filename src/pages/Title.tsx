@@ -22,7 +22,7 @@ const Title: React.FC = () => {
 
   const setHighScore = useGameStore((state) => state.setHighScore);
 
-  useEffect(() => {});
+  useEffect(() => { });
   return (
     <div className="game-container">
       <div className="back"></div>

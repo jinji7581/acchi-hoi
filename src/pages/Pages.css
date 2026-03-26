@@ -31,6 +31,7 @@ body,
   background-position: center;
   background-repeat: no-repeat;
 }
+
 .back-sea {
   position: absolute;
   width: 100vw;
@@ -51,6 +52,7 @@ body,
 .triangle:hover {
   filter: brightness(2);
 }
+
 .triangle:active {
   filter: brightness(0) invert(1);
 }
@@ -65,6 +67,7 @@ body,
   font-size: 48px;
   color: black;
 }
+
 .title-logo {
   image-rendering: pixelated;
   position: absolute;
@@ -78,10 +81,11 @@ body,
   position: absolute;
   top: 60%;
   left: 50%;
-  background-color: rgb(0, 0, 0);
-  /* ボタンの色 */
-  border: 2px solid #ffffff;
-  /* 縁の色 */
+  width: 200px;
+  /* height: 64px; */
+  background-image: url("../assets/BG_Blue.png");
+  background-size: cover;
+  border: none;
   transform: translate(-50%, -50%);
   font-size: 40px;
   padding: 10px 80px;
@@ -141,6 +145,7 @@ body,
   font-size: 48px;
   color: black;
 }
+
 .setup-text {
   width: 250px;
   text-align: center;
@@ -356,18 +361,26 @@ body,
   width: 100px;
   height: auto;
 }
+
 .play-chara-packet-content {
-  width: 50px; /* 各プレイヤーごとに固定幅 */
+  width: 50px;
+  /* 各プレイヤーごとに固定幅 */
   display: flex;
   flex-direction: column;
-  align-items: center; /* 画像と♥を中央揃え */
+  align-items: center;
+  /* 画像と♥を中央揃え */
 }
+
 .player-lives {
-  margin-top: 4px; /* 画像との隙間 */
+  margin-top: 4px;
+  /* 画像との隙間 */
 }
+
 .player-status {
-  position: fixed; /* 縦方向は画面基準 */
-  top: 40px; /* 画面上部から20px */
+  position: fixed;
+  /* 縦方向は画面基準 */
+  top: 40px;
+  /* 画面上部から20px */
   font-weight: bold;
 
   font-size: 48px;
@@ -385,24 +398,30 @@ body,
   font-weight: bold;
   -webkit-text-stroke: 0.02em #000000;
 }
+
 .player-0 {
   color: red;
 }
+
 .player-1 {
   color: rgb(0, 183, 255);
 }
+
 .player-2 {
   color: yellow;
 }
+
 .player-3 {
   color: rgb(119, 255, 0);
 }
+
 .round-text {
   position: absolute;
   bottom: 80px;
   right: 300px;
   gap: 200px;
-  display: inline-block; /* transformを効かせるために必要 */
+  display: inline-block;
+  /* transformを効かせるために必要 */
   transform: scaleY(0.6);
   font-size: 60px;
   color: rgb(145, 121, 69);
@@ -565,6 +584,7 @@ body,
   font-size: 48px;
   color: black;
 }
+
 .result-text2 {
   position: absolute;
   top: 64%;
@@ -573,6 +593,7 @@ body,
   font-size: 48px;
   color: black;
 }
+
 .result-text3 {
   position: absolute;
   top: 72%;
