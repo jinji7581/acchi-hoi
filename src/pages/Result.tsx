@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../zustand";
 import Abutton from "../assets/buttonA.mp3";
 import Bbutton from "../assets/buttonD.mp3";
+import BGM1 from "../assets/resultBGMsummer.mp3";
+import BGM2 from "../assets/resultBGMwinter.mp3";
 import Cookies from "js-cookie";
 
 const Result: React.FC = () => {
@@ -77,6 +79,11 @@ const Result: React.FC = () => {
   return (
     <div className="game-container">
       <div className="back"></div>
+      {getHighScore ? (
+        <audio src={BGM1} autoPlay loop />
+      ) : (
+        <audio src={BGM2} autoPlay loop />
+      )}
       <div className="result-text">結果発表</div>
       <div className="result-table">
         {Array.from({ length: playerCount }).map((_, i) => (
