@@ -92,8 +92,10 @@ const Result: React.FC = () => {
           </div>
         ))}
       </div>
-      <div className="result-text2">ハイスコア:{highScore}pt</div>
-      {getHighScore && <div className="result-text3">ハイスコア更新！</div>}
+      <div className="HighScore">
+        <div className="result-text2">ハイスコア:{highScore}pt</div>
+        {getHighScore && <div className="result-text3">ハイスコア更新！</div>}
+      </div>
       <div className="result-buttons">
         <button className="result-button" onClick={clickStart}>
           もういちど

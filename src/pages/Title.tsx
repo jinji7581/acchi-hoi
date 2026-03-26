@@ -26,13 +26,13 @@ const Title: React.FC = () => {
 
   const setHighScore = useGameStore((state) => state.setHighScore);
 
-  useEffect(() => {
-    const cookieHighScore = Cookies.get("cookieHighScore");
-    if (cookieHighScore) {
-      const numHighScore: number = Number(cookieHighScore);
-      setHighScore(numHighScore);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const cookieHighScore = Cookies.get("cookieHighScore");
+  //   if (cookieHighScore) {
+  //     const numHighScore: number = Number(cookieHighScore);
+  //     setHighScore(numHighScore);
+  //   }
+  // }, []);
 
   return (
     <div className="game-container">
