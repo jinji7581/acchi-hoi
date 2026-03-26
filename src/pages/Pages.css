@@ -565,20 +565,31 @@ body,
   font-size: 48px;
   color: black;
 }
+.HighScore {
+  position: absolute;
+  top: 70%;
+  width: 100%;
+  display: flex;
+  justify-content: center; /* 中央寄せ */
+  align-items: center;
+  gap: 16px; /* 要素間の余白 */
+}
+
 .result-text2 {
   position: absolute;
-  top: 64%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  left: 50%; /* 横方向中央 */
+  transform: translateX(-50%); /* 自分の幅の半分だけ左にずらす */
   font-size: 48px;
   color: black;
 }
+
 .result-text3 {
   position: absolute;
-  top: 72%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 48px;
+  left: calc(
+    50% + 200px
+  ); /* ハイスコアの右側に配置。200px はハイスコア幅に応じて調整 */
+  top: 0;
+  font-size: 24px;
   color: black;
 }
 
