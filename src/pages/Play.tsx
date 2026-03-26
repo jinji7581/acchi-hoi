@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useInterface } from "../features/game/hooks/interface";
 import "./Pages.css";
 import { useNavigate } from "react-router-dom";
@@ -60,6 +60,8 @@ import menuButton from "../assets/menuButton.png";
 import menuFrame from "../assets/menuFrame.png";
 import kaSound from "../assets/ka.mp3";
 import kanSound from "../assets/kan.mp3";
+import oSound from "../assets/o.mp3";
+import xSound from "../assets/x.mp3";
 import Abutton from "../assets/buttonA.mp3";
 import { useGameLoop } from "../features/game/hooks/useGameLoop";
 import type { phase } from "../zustand";
@@ -115,6 +117,9 @@ const Play = () => {
   const [isMenu, setIsMenu] = useState<boolean>(false);
   const [addC, setAddC] = useState<string[]>(["", "", "", "", "", "", "", ""]);
   const deleteToken = useGameStore((state) => state.deleteToken);
+  const resultEffect = useGameStore((state) => state.resultEffect);
+  const setResultEffect = useGameStore((state) => state.setResultEffect);
+  const [combo, setCombo] = useState<number>(0);
 
   const clickMenu = () => {
     playSoundA();
@@ -174,7 +179,9 @@ const Play = () => {
       audioRefKa.current = new Audio(kaSound);
     }
     audioRefKa.current.currentTime = 0;
-    audioRefKa.current.playbackRate = 1.0;
+    const rate = Math.min(Math.max(1 + round * 0.02, 0.25), 1.5);
+    audioRefKa.current.playbackRate = rate;
+    audioRefKa.current.preservesPitch = false;
     audioRefKa.current.play();
   };
   const playSoundKan = () => {
@@ -190,6 +197,28 @@ const Play = () => {
     }
     audioRefA.current.currentTime = 0;
     audioRefA.current.play();
+  };
+  const audioRefo = useRef<HTMLAudioElement | null>(null);
+  const audioRefx = useRef<HTMLAudioElement | null>(null);
+
+  const playSoundo = () => {
+    if (!audioRefo.current) {
+      audioRefo.current = new Audio(oSound);
+    }
+    audioRefo.current.currentTime = 0;
+    const rate = Math.min(Math.max(1 + combo * 0.02, 0.25), 1.5);
+    audioRefo.current.playbackRate = rate;
+    audioRefo.current.preservesPitch = false;
+    audioRefo.current.play();
+    setCombo(combo + 1);
+  };
+  const playSoundx = () => {
+    if (!audioRefx.current) {
+      audioRefx.current = new Audio(xSound);
+    }
+    audioRefx.current.currentTime = 0;
+    audioRefx.current.play();
+    setCombo(0);
   };
 
   useEffect(() => {
@@ -242,6 +271,10 @@ const Play = () => {
   ]);
 
   useEffect(() => {
+    setResultEffect(0, null);
+    setResultEffect(1, null);
+    setResultEffect(2, null);
+    setResultEffect(3, null);
     if (round > 16) {
       setAddC(Array(8).fill("c"));
     }
@@ -281,6 +314,21 @@ const Play = () => {
     setRound(1);
   }, []);
 
+  useEffect(() => {
+    if (resultEffect[0] === null) return;
+
+    let hasSuccess = false;
+    let hasFail = false;
+
+    for (let i = 0; i < resultEffect.length; i++) {
+      if (resultEffect[i] === "success") hasSuccess = true;
+      if (resultEffect[i] === "fail") hasFail = true;
+    }
+
+    if (hasSuccess) playSoundo();
+    if (hasFail) playSoundx();
+  }, [resultEffect[0]]);
+
   return (
     <div className="game-container">
       <div className="back-sea"></div>
@@ -302,7 +350,11 @@ const Play = () => {
                     playerDirections[i] as keyof typeof playerImages
                   ][isMaleCharacter[i] ? "m" : "w"][i]
                 }
-                className="play-image"
+                className={`
+                  play-image
+                  ${resultEffect[i] === "success" ? "success-jump" : ""}
+                  ${resultEffect[i] === "fail" ? "fail-shake" : ""}
+                `}
               />
             </div>
           );

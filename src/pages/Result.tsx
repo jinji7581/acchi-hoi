@@ -2,8 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import "./Pages.css";
 import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../zustand";
+import resultFrame from "../assets/resultFrame.png";
 import Abutton from "../assets/buttonA.mp3";
 import Bbutton from "../assets/buttonD.mp3";
+import BGM1 from "../assets/resultBGMsummer.mp3";
+import BGM2 from "../assets/resultBGMwinter.mp3";
+import Cookies from "js-cookie";
 
 const Result: React.FC = () => {
   const playerCount = useGameStore((state) => state.playerCount);
@@ -70,31 +74,49 @@ const Result: React.FC = () => {
     if (sortedValues[0] > highScore) {
       setHighScore(sortedValues[0]);
       setGetHighScore(true);
+      Cookies.set("cookieHighScore", String(sortedValues[0]), { expires: 365 });
+    }
+  }, []);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.2; // 音量を20%に設定
     }
   }, []);
   return (
     <div className="game-container">
       <div className="back"></div>
-      <div className="result-text">結果発表</div>
-      <div className="result-table">
-        {Array.from({ length: playerCount }).map((_, i) => (
-          <div className="result-packet" key={i}>
-            {i + 1}位 {sortedIndices[i] + 1}p {sortedValues[i]}pt
-          </div>
-        ))}
-      </div>
-      <div className="result-text2">ハイスコア:{highScore}pt</div>
-      {getHighScore && <div className="result-text3">ハイスコア更新！</div>}
-      <div className="result-buttons">
-        <button className="result-button" onClick={clickStart}>
-          もういちど
-        </button>
-        <button className="result-button" onClick={GotoSetting}>
-          設定へ
-        </button>
-        <button className="result-button" onClick={GotoTitle}>
-          タイトルへ
-        </button>
+      {getHighScore ? (
+        <audio ref={audioRef} src={BGM1} autoPlay loop />
+      ) : (
+        <audio ref={audioRef} src={BGM2} autoPlay loop />
+      )}
+      <div className="resultWrapper">
+        <img src={resultFrame} alt="result" className="resultImage" />
+        <div className="result-text">結果発表</div>
+        <div className="result-table">
+          {Array.from({ length: playerCount }).map((_, i) => (
+            <div className="result-packet" key={i}>
+              {i + 1}位 {sortedIndices[i] + 1}p {sortedValues[i]}pt
+            </div>
+          ))}
+        </div>
+        <div className="HighScore">
+          <div className="result-text2">ハイスコア:{highScore}pt</div>
+          {getHighScore && <div className="result-text3">ハイスコア更新！</div>}
+        </div>
+        <div className="result-buttons">
+          <button className="result-button" onClick={clickStart}>
+            もういちど
+          </button>
+          <button className="result-button" onClick={GotoSetting}>
+            設定へ
+          </button>
+          <button className="result-button" onClick={GotoTitle}>
+            タイトルへ
+          </button>
+        </div>
       </div>
     </div>
   );

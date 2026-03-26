@@ -104,6 +104,34 @@ body,
   background-image: url("../assets/button_Blue_3.png");
 }
 
+.delete-button-wrapper {
+  width: 100;
+}
+
+.delete {
+  position: absolute;
+  top: 88%;
+  left: 85%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(122, 122, 122);
+  /* ボタンの色 */
+  border: 2px solid #323232;
+  /* 縁の色 */
+  transform: translate(-50%, -50%);
+  font-size: 15px;
+  padding: 5px 10px;
+  color: rgb(0, 0, 0);
+}
+
+.suka {
+  position: absolute;
+  top: 95%;
+  left: 85%;
+  transform: translate(-50%, -50%);
+  font-size: 15px;
+  color: black;
+}
+
 /* Setup */
 
 .setup1 {
@@ -598,19 +626,20 @@ body,
 
 .result-text2 {
   position: absolute;
-  top: 64%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  /* 横方向中央 */
+  transform: translateX(-50%);
+  /* 自分の幅の半分だけ左にずらす */
   font-size: 48px;
   color: black;
 }
 
 .result-text3 {
   position: absolute;
-  top: 72%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 48px;
+  left: calc(50% + 200px);
+  /* ハイスコアの右側に配置。200px はハイスコア幅に応じて調整 */
+  top: 0;
+  font-size: 24px;
   color: black;
 }
 
@@ -620,7 +649,7 @@ body,
   left: 50%;
   transform: translate(-50%, 0%);
   font-size: 48px;
-  color: black;
+  color: rgb(116, 72, 18);
 }
 
 .result-packet {
