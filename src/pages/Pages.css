@@ -78,27 +78,31 @@ body,
 }
 
 .title-start-button {
+  image-rendering: pixelated;
   position: absolute;
-  top: 60%;
+  top: 70%;
   left: 50%;
-  width: 200px;
-  /* height: 64px; */
+  width: 300px;
+  height: 100px;
   background-image: url("../assets/BG_Blue.png");
   background-size: cover;
+  background-position: center;
+  background-color: transparent;
   border: none;
   transform: translate(-50%, -50%);
-  font-size: 40px;
-  padding: 10px 80px;
-  color: rgb(255, 255, 255);
+  font-size: 50px;
+  /* padding: 10px 80px;*/
+  padding-bottom: 8px;
+  color: rgb(0, 0, 0);
   /* 文字の色 */
 }
 
 .title-start-button:hover {
-  background-color: rgb(81, 81, 81);
+  /* background-color: rgb(81, 81, 81); */
 }
 
 .title-start-button:active {
-  background-color: #adadad;
+  /*background-color: #adadad;*/
   /* 押した瞬間の色 */
 }
 
