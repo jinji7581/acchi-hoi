@@ -43,7 +43,7 @@ const Title: React.FC = () => {
     const cookieHighScore = Cookies.get("cookieHighScore");
     const cookieTimeHighScore = Cookies.get("cookieTimeHighScore");
     if (cookieHighScore) {
-      setHighScore(Number(cookieTimeHighScore));
+      setHighScore(Number(cookieHighScore));
     }
     if (cookieTimeHighScore) {
       setHighScore2(Number(cookieTimeHighScore));
