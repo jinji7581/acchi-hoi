@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import "./Pages.css";
 // import { useNavigate } from "react-router-dom";
 import { useGameStore } from "../zustand";
@@ -13,10 +13,9 @@ import p4w from "../assets/p4wN.png";
 import p4m from "../assets/p4mN.png";
 import left_arrow from "../assets/left_arrow.png";
 import right_arrow from "../assets/right_arrow.png";
-import left_C from "../assets/left_C.png";
-import right_C from "../assets/right_C.png";
 import Abutton from "../assets/buttonA.mp3";
 import Bbutton from "../assets/buttonD.mp3";
+import BGm from "../assets/settingBGM.mp3";
 const pnw = [p1w, p2w, p3w, p4w];
 const pnm = [p1m, p2m, p3m, p4m];
 
@@ -63,9 +62,17 @@ const SetChara: React.FC = () => {
     audioRefB.current.currentTime = 0;
     audioRefB.current.play();
   };
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.2; // 音量を20%に設定
+    }
+  }, []);
   return (
     <div className="game-container">
       <div className="back"></div>
+      <audio ref={audioRef} src={BGm} autoPlay loop />
       <div className="set-chara-text">キャラ選択</div>
       <div className="chara-content">
         {Array.from({ length: playerCount }).map((_, i) => (

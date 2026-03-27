@@ -2,15 +2,18 @@ import { create } from "zustand";
 
 export type Direction = "up" | "down" | "left" | "right" | "center" | null;
 export type phase = "arrow" | "waiting" | "judging";
+export type Success = "success" | "fail" | null;
 
 type gameState = {
   playerCount: number;
   round: number; //ラウンド
   showingCharacter: boolean;
   isPointSystem: boolean;
+  isTimeAtack: boolean;
   isMaleCharacter: boolean[];
   scores: number[]; //ポイント
   lives: number[]; //残機
+  timeScore: number; //ポイント
   currentDirections: Direction[];
   playerDirections: Direction[];
   timer: number;
@@ -19,6 +22,8 @@ type gameState = {
   token: boolean[];
   highScore: number;
   calibration_timer: number;
+  highScore2: number;
+  resultEffect: Success[];
   increasePlayerCount: () => void;
   decreasePlayerCount: () => void;
   setPlayerCount: (c: number) => void;
@@ -27,10 +32,12 @@ type gameState = {
   setRound: (c: number) => void;
   setShowingCharacter: (c: boolean) => void;
   setIsPointSystem: (c: boolean) => void;
+  setIsTimeAtack: (c: boolean) => void;
   setIsMaleCharacter: (index: number, value: boolean) => void;
   increaseScore: (index: number) => void;
   decreaseScore: (index: number) => void;
   setScore: (index: number, value: number) => void;
+  setTimeScore: (value: number) => void;
   increaseLife: (index: number) => void;
   decreaseLife: (index: number) => void;
   setLife: (index: number, value: number) => void;
@@ -43,6 +50,8 @@ type gameState = {
   setHighScore: (index: number) => void;
   setCalibration_timer: (c: number) => void;
   increaseCalibration_timer: () => void;
+  setHighScore2: (index: number) => void;
+  setResultEffect: (index: number, value: Success) => void;
 };
 
 export const useGameStore = create<gameState>((set) => ({
@@ -68,6 +77,10 @@ export const useGameStore = create<gameState>((set) => ({
   isPointSystem: true,
   setIsPointSystem: (c: boolean) => set({ isPointSystem: c }),
 
+  // TA
+  isTimeAtack: false,
+  setIsTimeAtack: (c: boolean) => set({ isTimeAtack: c }),
+
   // 性別
   isMaleCharacter: [true, true, true, true],
   setIsMaleCharacter: (index: number, value: boolean) =>
@@ -91,6 +104,9 @@ export const useGameStore = create<gameState>((set) => ({
     set((state) => ({
       scores: state.scores.map((s, i) => (i === index ? value : s)),
     })),
+
+  timeScore: 0,
+  setTimeScore: (c: number) => set({ timeScore: c }),
 
   // 残機
   lives: [3, 3, 3, 3],
@@ -152,6 +168,15 @@ export const useGameStore = create<gameState>((set) => ({
   setCalibration_timer: (c: number) => set({ calibration_timer: c }),
   increaseCalibration_timer: () =>
     set((state) => ({ calibration_timer: state.calibration_timer + 1 })),
+  highScore2: 99990,
+  setHighScore2: (c: number) => set({ highScore2: c }),
+
+  // ジャッジの判定
+  resultEffect: [null, null, null, null],
+  setResultEffect: (index: number, value: Success) =>
+    set((state) => ({
+      resultEffect: state.resultEffect.map((l, i) => (i === index ? value : l)),
+    })),
 }));
 
 // まだやって無ければターミナルでnpm install zustandを実行する。

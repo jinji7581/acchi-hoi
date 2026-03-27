@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import { useGameStore } from "../../../zustand";
 import { type Direction } from "../../../zustand";
@@ -6,9 +6,10 @@ import { type Direction } from "../../../zustand";
 const useDirection = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   //   const [directions, setDirections] = useState<string[]>(["無", "無", "無"]);
-  const [sayuu, setSayuu] = useState<number[]>([0, 0, 0, 0]);
-  const [joge, setJoge] = useState<number[]>([0, 0, 0, 0]);
+  // const [sayuu, setSayuu] = useState<number[]>([0, 0, 0, 0]);
+  // const [joge, setJoge] = useState<number[]>([0, 0, 0, 0]);
   //   const cameraDirections = useGameStore((state) => state.cameraDirections);
+  const playerCount = useGameStore((state) => state.playerCount);
   const setCameraDirections = useGameStore(
     (state) => state.setCameraDirections,
   );
@@ -125,8 +126,8 @@ const useDirection = () => {
         });
       }
 
-      setSayuu(newSayuus);
-      setJoge(newJoges);
+      // setSayuu(newSayuus);
+      // setJoge(newJoges);
       animationFrameId = requestAnimationFrame(predictWebcam);
     };
     setUpDetector();

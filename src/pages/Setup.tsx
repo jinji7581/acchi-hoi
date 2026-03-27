@@ -9,6 +9,7 @@ import left_C from "../assets/left_C.png";
 import right_C from "../assets/right_C.png";
 import Abutton from "../assets/buttonA.mp3";
 import Bbutton from "../assets/buttonD.mp3";
+import BGm from "../assets/settingBGM.mp3";
 
 const Setup: React.FC = () => {
   // グローバル変数
@@ -25,6 +26,8 @@ const Setup: React.FC = () => {
   );
   const isPointSystem = useGameStore((state) => state.isPointSystem);
   const setIsPointSystem = useGameStore((state) => state.setIsPointSystem);
+  const isTimeAtack = useGameStore((state) => state.isTimeAtack);
+  const setIsTimeAtack = useGameStore((state) => state.setIsTimeAtack);
   const setRound = useGameStore((state) => state.setRound);
 
   const highScore = useGameStore((state) => state.highScore);
@@ -82,11 +85,21 @@ const Setup: React.FC = () => {
   };
   const pointTrue = () => {
     playSoundA();
-    setIsPointSystem(true);
+    if (!isTimeAtack) {
+      setIsPointSystem(true);
+    } else {
+      setIsPointSystem(false);
+      setIsTimeAtack(false);
+    }
   };
   const pointFalse = () => {
     playSoundA();
-    setIsPointSystem(false);
+    if (isPointSystem && !isTimeAtack) {
+      setIsPointSystem(false);
+    } else {
+      setIsPointSystem(true);
+      setIsTimeAtack(true);
+    }
   };
 
   const audioRefA = useRef<HTMLAudioElement | null>(null);
@@ -115,9 +128,17 @@ const Setup: React.FC = () => {
       setAddC(["c", "", ""]);
     }
   }, []);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.2; // 音量を20%に設定
+    }
+  }, []);
   return (
     <div className="game-container">
       <div className="back"></div>
+      <audio ref={audioRef} src={BGm} autoPlay loop />
       <div className="setup1">
         <div>参加人数　　</div>
         <img
@@ -154,7 +175,11 @@ const Setup: React.FC = () => {
           className="triangle"
         />
         <div className="setup-text">
-          {isPointSystem ? "ポイント制" : "残機制"}
+          {isPointSystem
+            ? isTimeAtack
+              ? "タイムアタック"
+              : "ポイント制"
+            : "残機制"}
         </div>
         <img
           src={arrowImages[("right" + addC[0]) as ArrowKey]}
@@ -166,7 +191,7 @@ const Setup: React.FC = () => {
         戻る
       </button>
       <button className="setup-start-button" onClick={clickStart}>
-        GameStart!
+        {showingCharacter ? "Next" : "GameStart!"}
       </button>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 // import { useInterface } from "../features/game/hooks/interface";
 import "./Pages.css";
 import { useNavigate } from "react-router-dom";
@@ -60,6 +60,8 @@ import menuButton from "../assets/menuButton.png";
 import menuFrame from "../assets/menuFrame.png";
 import kaSound from "../assets/ka.mp3";
 import kanSound from "../assets/kan.mp3";
+import oSound from "../assets/o.mp3";
+import xSound from "../assets/x.mp3";
 import Abutton from "../assets/buttonA.mp3";
 import { useGameLoop } from "../features/game/hooks/useGameLoop";
 import type { phase } from "../zustand";
@@ -96,10 +98,12 @@ const arrowImages = {
 const Play = () => {
   const currentDirections = useGameStore((state) => state.currentDirections);
   const playerDirections = useGameStore((state) => state.playerDirections);
+  const showingCharacter = useGameStore((state) => state.showingCharacter);
   const playerCount = useGameStore((state) => state.playerCount);
   const isMaleCharacter = useGameStore((state) => state.isMaleCharacter);
   const round: number = useGameStore((state) => state.round); //ゲームのラウンド
   const increaseRound = useGameStore((state) => state.increaseRound);
+  const decreaseRound = useGameStore((state) => state.decreaseRound);
   const setRound = useGameStore((state) => state.setRound);
   const setScore = useGameStore((state) => state.setScore);
   const setLife = useGameStore((state) => state.setLife);
@@ -108,6 +112,7 @@ const Play = () => {
 
   const lives: number[] = useGameStore((state) => state.lives);
   const isPointSystem: boolean = useGameStore((state) => state.isPointSystem);
+  const isTimeAtack: boolean = useGameStore((state) => state.isTimeAtack);
   const scores = useGameStore((state) => state.scores);
   const [timer, settimer] = useState<number>(0); //カウント
 
@@ -116,6 +121,11 @@ const Play = () => {
   const [addC, setAddC] = useState<string[]>(["", "", "", "", "", "", "", ""]);
   const deleteToken = useGameStore((state) => state.deleteToken);
   const calibration_timer = useGameStore((state) => state.calibration_timer);
+  const resultEffect = useGameStore((state) => state.resultEffect);
+  const setResultEffect = useGameStore((state) => state.setResultEffect);
+  const [combo, setCombo] = useState<number[]>([0, 0, 0, 0]);
+  const settimeScore = useGameStore((state) => state.setTimeScore);
+  const startRef = useRef<number | null>(null);
 
   const clickMenu = () => {
     playSoundA();
@@ -158,6 +168,22 @@ const Play = () => {
     }
     navigate("/");
   };
+  const increaseCombo = (i: number) => {
+    setCombo((prev) => {
+      const newCombos = [...prev]; // 配列をコピー
+      newCombos[i] += 1; // i番目のコンボを1増やす
+      return newCombos; // 新しい配列で更新
+    });
+  };
+
+  // i番目のプレイヤーがミスしたとき
+  const resetCombo = (i: number) => {
+    setCombo((prev) => {
+      const newCombos = [...prev];
+      newCombos[i] = 0;
+      return newCombos;
+    });
+  };
 
   useGameLoop(); //ここで矢印の方向を作る関数を呼び出す
   // useInterface(); //ここでキー操作の関数を呼び出す
@@ -174,7 +200,9 @@ const Play = () => {
       audioRefKa.current = new Audio(kaSound);
     }
     audioRefKa.current.currentTime = 0;
-    audioRefKa.current.playbackRate = 1.0;
+    const rate = Math.min(Math.max(1 + round * 0.02, 0.25), 1.5);
+    audioRefKa.current.playbackRate = rate;
+    audioRefKa.current.preservesPitch = false;
     audioRefKa.current.play();
   };
   const playSoundKan = () => {
@@ -191,6 +219,44 @@ const Play = () => {
     audioRefA.current.currentTime = 0;
     audioRefA.current.play();
   };
+  const audioRefo = useRef<HTMLAudioElement | null>(null);
+  const audioRefx = useRef<HTMLAudioElement | null>(null);
+
+  const playSoundo = () => {
+    if (!audioRefo.current) {
+      audioRefo.current = new Audio(oSound);
+    }
+    audioRefo.current.currentTime = 0;
+    const rate = Math.min(
+      Math.max(
+        1 + Math.max(combo[0], combo[1], combo[2], combo[3]) * 0.02,
+        0.25,
+      ),
+      1.5,
+    );
+    audioRefo.current.playbackRate = rate;
+    audioRefo.current.preservesPitch = false;
+    audioRefo.current.play();
+  };
+  const playSoundx = () => {
+    if (!audioRefx.current) {
+      audioRefx.current = new Audio(xSound);
+    }
+    audioRefx.current.currentTime = 0;
+    audioRefx.current.play();
+  };
+
+  useEffect(() => {
+    settimer(0);
+    setRound(1);
+
+    for (let i = 0; i < playerCount; i++) {
+      setScore(i, 0);
+      setLife(i, 3);
+      setResultEffect(i, null);
+    }
+    setPhase("waiting");
+  }, []);
 
   useEffect(() => {
     setcount_speed(Math.max(600 - round * 30, 375));
@@ -204,10 +270,24 @@ const Play = () => {
     ) {
       playSoundKa();
     }
+    if (timer == 1) {
+      if (isTimeAtack) {
+        startRef.current = performance.now();
+      }
+    }
     if (timer === 3 || timer === 7) {
       playSoundKan();
     }
     if (timer === 4) {
+      if (isTimeAtack) {
+        if (resultEffect[0] == "fail") {
+          decreaseRound();
+        }
+        setResultEffect(0, null);
+        setResultEffect(1, null);
+        setResultEffect(2, null);
+        setResultEffect(3, null);
+      }
       setPhase("arrow");
       //console.log("arrow");
     }
@@ -226,9 +306,26 @@ const Play = () => {
           if (i === playerCount - 1) navigate("/Result"); //残機制のプレイヤーが全員死んだときの画面遷移
         }
       } else {
-        if (round === 10) navigate("/Result"); //ポイント制プレイヤーが10ラウンドを終えたときの画面遷移
+        if ((isTimeAtack && resultEffect[0] == "success") || !isTimeAtack) {
+          if (isTimeAtack) {
+            const end = performance.now();
+            if (startRef.current !== null) {
+              settimeScore(end - startRef.current);
+            }
+          }
+          if (round === 10) navigate("/Result"); //ポイント制プレイヤーが10ラウンドを終えたときの画面遷移
+        }
       }
       increaseRound();
+
+      if (isTimeAtack) {
+        settimer(4);
+      } else {
+        setResultEffect(0, null);
+        setResultEffect(1, null);
+        setResultEffect(2, null);
+        setResultEffect(3, null);
+      }
     }
   }, [
     timer,
@@ -261,7 +358,6 @@ const Play = () => {
       setAddC(newArray);
     }
   }, [round]);
-
   useEffect(() => {
     //メニューを開いたとき以外はタイマーを動かし続ける
     const intervalId = setInterval(() => {
@@ -277,41 +373,102 @@ const Play = () => {
   }, [count_speed, isMenu, calibration_timer]);
 
   useEffect(() => {
-    settimer(0);
-    setRound(1);
-  }, []);
+    if (isTimeAtack && phase === "arrow" && playerDirections[0] != "center") {
+      settimer(8);
+    }
+  }, [playerDirections[0]]);
+
+  useEffect(() => {
+    if (resultEffect[0] === null) return;
+
+    let hasSuccess = false;
+    let hasFail = false;
+
+    for (let i = 0; i < resultEffect.length; i++) {
+      if (resultEffect[i] === "success") {
+        hasSuccess = true;
+        increaseCombo(i);
+      }
+      if (resultEffect[i] === "fail") {
+        hasFail = true;
+        resetCombo(i);
+      }
+    }
+
+    if (hasSuccess) playSoundo();
+    if (hasFail) playSoundx();
+  }, [resultEffect[0]]);
 
   return (
     <div className="game-container">
-      <div className="back-sea"></div>
-      <img src={menuButton} className="menu-button" onClick={clickMenu} />
-      <div className="play-chara-content">
-        {Array.from({ length: playerCount }).map((_, i) => {
-          const safeLives = Math.max(0, lives[i]); // 応急処置
-          return (
-            <div className="play-chara-packet-content" key={i}>
-              {/* 上に表示 */}
-              <div className={`player-${i} player-status`}>
-                {isPointSystem ? `${scores[i]}pt` : "♥".repeat(safeLives)}
-              </div>
-
-              {/* キャラクター画像 */}
-              <img
-                src={
-                  playerImages[
-                    playerDirections[i] as keyof typeof playerImages
-                  ][isMaleCharacter[i] ? "m" : "w"][i]
-                }
-                className="play-image"
-              />
-            </div>
-          );
-        })}
+      <div className="visual">
+        <div className="movie">
+          <div>
+            <video ref={videoRef} muted playsInline autoPlay />
+          </div>
+        </div>
       </div>
+      {showingCharacter ? (
+        <>
+          <div className="back-sea"></div>
+          <img src={menuButton} className="menu-button" onClick={clickMenu} />
+          <div className="play-chara-content">
+            {Array.from({ length: playerCount }).map((_, i) => {
+              const safeLives = Math.max(0, lives[i]); // 応急処置
+              return (
+                <div className="play-chara-packet-content" key={i}>
+                  {/* 上に表示 */}
+                  <div className={`player-${i} player-status`}>
+                    {isPointSystem ? `${scores[i]}pt` : "♥".repeat(safeLives)}
+                  </div>
+
+                  {resultEffect[i] == "success" && combo[i] > 4 && (
+                    <div className="combo">{combo[i]}combo</div>
+                  )}
+
+                  {/* キャラクター画像 */}
+                  <img
+                    src={
+                      playerImages[
+                        playerDirections[i] as keyof typeof playerImages
+                      ][isMaleCharacter[i] ? "m" : "w"][i]
+                    }
+                    className={`
+                  play-image
+                  ${resultEffect[i] === "success" ? "success-jump" : ""}
+                  ${resultEffect[i] === "fail" ? "fail-shake" : ""}
+                `}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </>
+      ) : (
+        <>
+          <img src={menuButton} className="menu-button" onClick={clickMenu} />
+          <div className="play-chara-content">
+            {Array.from({ length: playerCount }).map((_, i) => {
+              const safeLives = Math.max(0, lives[i]); // 応急処置
+              return (
+                <div className="play-chara-packet-content" key={i}>
+                  {/* 上に表示 */}
+                  <div className={`player-${i} player-status`}>
+                    {isPointSystem ? `${scores[i]}pt` : "♥".repeat(safeLives)}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+
       <div className="judge-display-area">
         {phase === "judging" && <Judge />}
       </div>
-      <div className="round-text">round {round}</div>
+      <div className={`round-text ${showingCharacter ? "chara" : ""}`}>
+        round {round}
+      </div>
       {phase === "arrow" && !isMenu && (
         <>
           <div className="arrow_up">
