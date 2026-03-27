@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 const Title: React.FC = () => {
   const [isSuka, setIsSuka] = useState<boolean>(false);
   const setHighScore = useGameStore((state) => state.setHighScore);
+  const setHighScore2 = useGameStore((state) => state.setHighScore2);
   const navigate = useNavigate();
   const clickStart = () => {
     playSoundB();
@@ -23,6 +24,7 @@ const Title: React.FC = () => {
     setIsSuka(false);
     playSoundB();
     setHighScore(0);
+    setHighScore2(99990);
   };
   const clickSuka = () => {
     setIsSuka(true);
@@ -35,7 +37,7 @@ const Title: React.FC = () => {
     audioRefB.current.currentTime = 0;
     audioRefB.current.play();
   };
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   useEffect(() => {
     const cookieHighScore = Cookies.get("cookieHighScore");
