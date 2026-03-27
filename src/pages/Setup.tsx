@@ -186,7 +186,7 @@ const Setup: React.FC = () => {
         戻る
       </button>
       <button className="setup-start-button" onClick={clickStart}>
-        Next
+        {showingCharacter ? "Next" : "GameStart!"}
       </button>
     </div>
   );
