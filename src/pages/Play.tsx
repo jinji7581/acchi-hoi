@@ -466,7 +466,9 @@ const Play = () => {
       <div className="judge-display-area">
         {phase === "judging" && <Judge />}
       </div>
-      <div className="round-text">round {round}</div>
+      <div className={`round-text ${showingCharacter ? "chara" : ""}`}>
+        round {round}
+      </div>
       {phase === "arrow" && !isMenu && (
         <>
           <div className="arrow_up">
