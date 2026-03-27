@@ -277,6 +277,7 @@ body,
 }
 
 /* Play */
+
 .menu-button {
   position: absolute;
   image-rendering: pixelated;
@@ -408,6 +409,67 @@ body,
   flex-direction: column;
   align-items: center;
   /* 画像と♥を中央揃え */
+}
+.combo {
+  position: absolute;
+  top: -30px; /* キャラの上に表示 */
+  font-size: 35px;
+  font-weight: bold;
+  color: rgb(255, 166, 0);
+  opacity: 0;
+  animation: comboRise 0.8s forwards;
+}
+
+@keyframes comboRise {
+  0% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(-50%) translateY(-20px); /* 上に移動 */
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) translateY(-40px); /* さらに上に移動 */
+    opacity: 0; /* フェードアウト */
+  }
+}
+
+.success-jump {
+  animation: successJump 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes successJump {
+  0% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.fail-shake {
+  animation: failShake 0.28s ease;
+}
+
+@keyframes failShake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .player-lives {
@@ -623,13 +685,20 @@ body,
   font-size: 48px;
   color: black;
 }
+.HighScore {
+  position: absolute;
+  top: 70%;
+  width: 100%;
+  display: flex;
+  justify-content: center; /* 中央寄せ */
+  align-items: center;
+  gap: 16px; /* 要素間の余白 */
+}
 
 .result-text2 {
   position: absolute;
-  left: 50%;
-  /* 横方向中央 */
-  transform: translateX(-50%);
-  /* 自分の幅の半分だけ左にずらす */
+  left: 50%; /* 横方向中央 */
+  transform: translateX(-50%); /* 自分の幅の半分だけ左にずらす */
   font-size: 48px;
   color: black;
 }
@@ -637,13 +706,44 @@ body,
 .result-text3 {
   position: absolute;
   left: calc(
-    50% + 210px
+    50% + 200px
   ); /* ハイスコアの右側に配置。200px はハイスコア幅に応じて調整 */
   top: 0;
   font-size: 24px;
   color: black;
 }
 
+.resultWrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: scale(1);
+  opacity: 1;
+  transition: all 0.3s ease;
+  transform-origin: center;
+  pointer-events: auto;
+}
+.resultWrapper {
+  display: flex;
+  justify-content: center; /* 横中央 */
+  align-items: center; /* 縦中央 */
+  height: 100vh;
+}
+
+.resultImage {
+  width: 70vw;
+  display: flex;
+  width: 30%;
+  /* 画面幅の90% */
+  max-width: none;
+  /* max-width制限を解除 */
+  height: 50vw;
+  z-index: 20;
+  transform: translateY(3%);
+  height: auto;
+  z-index: -10;
+}
 .result-table {
   position: absolute;
   top: 35%;

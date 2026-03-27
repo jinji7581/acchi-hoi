@@ -121,7 +121,7 @@ const Play = () => {
   const deleteToken = useGameStore((state) => state.deleteToken);
   const resultEffect = useGameStore((state) => state.resultEffect);
   const setResultEffect = useGameStore((state) => state.setResultEffect);
-  const [combo, setCombo] = useState<number>(0);
+  const [combo, setCombo] = useState<number[]>([0, 0, 0, 0]);
   const settimeScore = useGameStore((state) => state.setTimeScore);
   const startRef = useRef<number | null>(null);
 
@@ -165,6 +165,22 @@ const Play = () => {
       setLife(i, 3);
     }
     navigate("/");
+  };
+  const increaseCombo = (i: number) => {
+    setCombo((prev) => {
+      const newCombos = [...prev]; // 配列をコピー
+      newCombos[i] += 1; // i番目のコンボを1増やす
+      return newCombos; // 新しい配列で更新
+    });
+  };
+
+  // i番目のプレイヤーがミスしたとき
+  const resetCombo = (i: number) => {
+    setCombo((prev) => {
+      const newCombos = [...prev];
+      newCombos[i] = 0;
+      return newCombos;
+    });
   };
 
   useGameLoop(); //ここで矢印の方向を作る関数を呼び出す
@@ -210,11 +226,16 @@ const Play = () => {
       audioRefo.current = new Audio(oSound);
     }
     audioRefo.current.currentTime = 0;
-    const rate = Math.min(Math.max(1 + combo * 0.02, 0.25), 1.5);
+    const rate = Math.min(
+      Math.max(
+        1 + Math.max(combo[0], combo[1], combo[2], combo[3]) * 0.02,
+        0.25,
+      ),
+      1.5,
+    );
     audioRefo.current.playbackRate = rate;
     audioRefo.current.preservesPitch = false;
     audioRefo.current.play();
-    setCombo(combo + 1);
   };
   const playSoundx = () => {
     if (!audioRefx.current) {
@@ -222,7 +243,6 @@ const Play = () => {
     }
     audioRefx.current.currentTime = 0;
     audioRefx.current.play();
-    setCombo(0);
   };
 
   useEffect(() => {
@@ -364,8 +384,14 @@ const Play = () => {
     let hasFail = false;
 
     for (let i = 0; i < resultEffect.length; i++) {
-      if (resultEffect[i] === "success") hasSuccess = true;
-      if (resultEffect[i] === "fail") hasFail = true;
+      if (resultEffect[i] === "success") {
+        hasSuccess = true;
+        increaseCombo(i);
+      }
+      if (resultEffect[i] === "fail") {
+        hasFail = true;
+        resetCombo(i);
+      }
     }
 
     if (hasSuccess) playSoundo();
@@ -385,6 +411,10 @@ const Play = () => {
               <div className={`player-${i} player-status`}>
                 {isPointSystem ? `${scores[i]}pt` : "♥".repeat(safeLives)}
               </div>
+
+              {resultEffect[i] == "success" && combo[i] > 4 && (
+                <div className="combo">{combo[i]}combo</div>
+              )}
 
               {/* キャラクター画像 */}
               <img
