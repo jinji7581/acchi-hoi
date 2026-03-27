@@ -37,7 +37,7 @@ const Title: React.FC = () => {
     audioRefB.current.currentTime = 0;
     audioRefB.current.play();
   };
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   useEffect(() => {
     const cookieHighScore = Cookies.get("cookieHighScore");
