@@ -878,6 +878,15 @@ body,
   pointer-events: none;
   /* 下の要素のクリックを邪魔したくない場合 */
 }
+.achievement-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
 
 /* Result */
 .result-text {
