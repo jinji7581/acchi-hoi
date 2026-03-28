@@ -133,6 +133,12 @@ const Play = () => {
   const hasAchieved = useGameStore((state) => state.hasAchieved);
   const setHasAchieved = useGameStore((state) => state.setHasAchieved);
   const [Clear, setClear] = useState([...isClear]);
+  const [notCenter, setNotCenter] = useState<boolean[]>([
+    false,
+    false,
+    false,
+    false,
+  ]);
   const [isCenter, setIsCenter] = useState<boolean[]>([
     false,
     false,
@@ -144,6 +150,7 @@ const Play = () => {
     if (hasAchieved) return;
     // すでに達成している場合は何もしない
     if (Clear[index]) return;
+    if (isClear[index]) return;
 
     // Reactのstateも更新
     const newClear = [...Clear];
@@ -182,6 +189,7 @@ const Play = () => {
     }
     setIsMenu(false);
     setHasAchieved(false);
+    setNotCenter([false, false, false, false]);
   };
   const GotoSetting = () => {
     playSoundA();
@@ -291,8 +299,10 @@ const Play = () => {
       setLife(i, 3);
       setResultEffect(i, null);
     }
+    setNotCenter([false, false, false, false]);
     setPhase("waiting");
     setHasAchieved(false);
+    achieve(0);
   }, []);
 
   useEffect(() => {
@@ -348,6 +358,16 @@ const Play = () => {
           achieve(2);
         }
       }
+
+      for (let i = 0; i < playerCount; i++) {
+        if (playerDirections[i] !== "center") {
+          setNotCenter((prev) => {
+            const newState = [...prev];
+            newState[i] = true;
+            return newState;
+          });
+        }
+      }
     }
     if (timer === 10) {
       setPhase("waiting");
@@ -394,6 +414,9 @@ const Play = () => {
   useEffect(() => {
     if (round > 16) {
       setAddC(Array(8).fill("c"));
+    }
+    if (round == 17) {
+      achieve(4);
     }
     if (round > 20) {
       setAddC(Array(8).fill("cmini"));
@@ -448,6 +471,9 @@ const Play = () => {
       if (resultEffect[i] === "fail") {
         hasFail = true;
         resetCombo(i);
+        if (!notCenter[i] && round == 3 && i < playerCount) {
+          achieve(7);
+        }
       }
     }
 
@@ -646,6 +672,7 @@ const Play = () => {
         </div>
       </div>
       <div className="achievement-layer">
+        <AchievementPopup isClear={Clear[0]} title="まずは様子見" />
         <AchievementPopup isClear={Clear[1]} title="連続王" />
         <AchievementPopup isClear={Clear[2]} title="全会一致" />
         <AchievementPopup isClear={Clear[3]} title="ギリギリセーフ" />
