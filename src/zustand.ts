@@ -26,6 +26,7 @@ type gameState = {
   resultEffect: Success[];
   isClear: boolean[];
   isOpen: boolean[];
+  hasAchieved: boolean;
   increasePlayerCount: () => void;
   decreasePlayerCount: () => void;
   setPlayerCount: (c: number) => void;
@@ -56,6 +57,7 @@ type gameState = {
   setResultEffect: (index: number, value: Success) => void;
   setIsClear: (index: number, value: boolean) => void;
   setIsOpen: (index: number, value: boolean) => void;
+  setHasAchieved: (c: boolean) => void;
 };
 
 export const useGameStore = create<gameState>((set) => ({
@@ -191,6 +193,8 @@ export const useGameStore = create<gameState>((set) => ({
     set((state) => ({
       isOpen: state.isOpen.map((l, i) => (i === index ? value : l)),
     })),
+  hasAchieved: false,
+  setHasAchieved: (c: boolean) => set({ hasAchieved: c }),
 }));
 
 // まだやって無ければターミナルでnpm install zustandを実行する。
