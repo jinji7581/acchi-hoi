@@ -57,6 +57,8 @@ type gameState = {
   setResultEffect: (index: number, value: Success) => void;
   setIsClear: (index: number, value: boolean) => void;
   setIsOpen: (index: number, value: boolean) => void;
+  resetIsClear: () => void;
+  resetIsOpen: () => void;
   setHasAchieved: (c: boolean) => void;
 };
 
@@ -193,6 +195,8 @@ export const useGameStore = create<gameState>((set) => ({
     set((state) => ({
       isOpen: state.isOpen.map((l, i) => (i === index ? value : l)),
     })),
+  resetIsClear: () => set({ isClear: Array(9).fill(false) }),
+  resetIsOpen: () => set({ isOpen: Array(9).fill(false) }),
   hasAchieved: false,
   setHasAchieved: (c: boolean) => set({ hasAchieved: c }),
 }));
