@@ -27,6 +27,8 @@ type gameState = {
   isClear: boolean[];
   isOpen: boolean[];
   hasAchieved: boolean;
+  up_standard: number[];
+  down_standard: number[];
   increasePlayerCount: () => void;
   decreasePlayerCount: () => void;
   setPlayerCount: (c: number) => void;
@@ -58,6 +60,8 @@ type gameState = {
   setIsClear: (index: number, value: boolean) => void;
   setIsOpen: (index: number, value: boolean) => void;
   setHasAchieved: (c: boolean) => void;
+  setUp_standard: (index: number, pitch: number) => void;
+  setDown_standard: (index: number, pitch: number) => void;
 };
 
 export const useGameStore = create<gameState>((set) => ({
@@ -195,6 +199,19 @@ export const useGameStore = create<gameState>((set) => ({
     })),
   hasAchieved: false,
   setHasAchieved: (c: boolean) => set({ hasAchieved: c }),
+
+  up_standard: [0.4, 0.4, 0.4, 0.4],
+  down_standard: [0.4, 0.4, 0.4, 0.4],
+  setUp_standard: (index: number, pitch: number) =>
+    set((state) => ({
+      up_standard: state.up_standard.map((l, i) => (i === index ? pitch : l)),
+    })),
+  setDown_standard: (index: number, pitch: number) =>
+    set((state) => ({
+      down_standard: state.down_standard.map((l, i) =>
+        i === index ? pitch : l,
+      ),
+    })),
 }));
 
 // まだやって無ければターミナルでnpm install zustandを実行する。
