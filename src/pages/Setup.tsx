@@ -221,7 +221,7 @@ const Setup: React.FC = () => {
       </button>
 
       <div className="achievement-layer">
-        <AchievementPopup isClear={Clear[8]} title="ランドルト環マスター" />
+        <AchievementPopup Clear={Clear[8]} title="ランドルト環マスター" />
       </div>
     </div>
   );

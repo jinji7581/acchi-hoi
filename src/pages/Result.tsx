@@ -178,8 +178,8 @@ const Result: React.FC = () => {
         </div>
       </div>
       <div className="achievement-layer">
-        <AchievementPopup isClear={Clear[5]} title="脊髄反射" />
-        <AchievementPopup isClear={Clear[6]} title="今日はこのへんで" />
+        <AchievementPopup Clear={Clear[5]} title="脊髄反射" />
+        <AchievementPopup Clear={Clear[6]} title="今日はこのへんで" />
       </div>
     </div>
   );

@@ -43,6 +43,9 @@ const Title: React.FC = () => {
   const setHighScore2 = useGameStore((state) => state.setHighScore2);
   const isOpen = useGameStore((state) => state.isOpen);
   const isClear = useGameStore((state) => state.isClear);
+  const resetIsClear = useGameStore((state) => state.resetIsClear);
+  const resetIsOpen = useGameStore((state) => state.resetIsOpen);
+  const setIsClear = useGameStore((state) => state.setIsClear);
   const setIsOpen = useGameStore((state) => state.setIsOpen);
   const navigate = useNavigate();
   const [isMenu, setIsMenu] = useState<boolean>(false);
@@ -62,6 +65,7 @@ const Title: React.FC = () => {
     playSoundB();
     setHighScore(0);
     setHighScore2(99990);
+    resetIsClear();
   };
   const clickSuka = () => {
     setIsSuka(true);
@@ -86,6 +90,7 @@ const Title: React.FC = () => {
   const clickMenu = () => {
     playSoundA();
     setIsMenu(true);
+    resetIsOpen();
     if (isClear[0]) {
       setIsOpen(1, true);
       setIsOpen(2, true);
@@ -130,6 +135,11 @@ const Title: React.FC = () => {
   useEffect(() => {
     const cookieHighScore = Cookies.get("cookieHighScore");
     const cookieTimeHighScore = Cookies.get("cookieTimeHighScore");
+    const saved = Cookies.get("achievements") || "fffffffff";
+
+    saved.split("").forEach((c, index) => {
+      setIsClear(index, c === "t");
+    });
     if (cookieHighScore) {
       setHighScore(Number(cookieHighScore));
     }

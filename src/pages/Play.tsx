@@ -302,7 +302,6 @@ const Play = () => {
     setNotCenter([false, false, false, false]);
     setPhase("waiting");
     setHasAchieved(false);
-    achieve(0);
   }, []);
 
   useEffect(() => {
@@ -321,6 +320,8 @@ const Play = () => {
       if (isTimeAtack) {
         startRef.current = performance.now();
       }
+
+      achieve(0);
     }
     if (timer === 3 || timer === 7) {
       playSoundKan();
@@ -672,12 +673,12 @@ const Play = () => {
         </div>
       </div>
       <div className="achievement-layer">
-        <AchievementPopup isClear={Clear[0]} title="まずは様子見" />
-        <AchievementPopup isClear={Clear[1]} title="連続王" />
-        <AchievementPopup isClear={Clear[2]} title="全会一致" />
-        <AchievementPopup isClear={Clear[3]} title="ギリギリセーフ" />
-        <AchievementPopup isClear={Clear[4]} title="もはや視力検査" />
-        <AchievementPopup isClear={Clear[7]} title="方向音痴" />
+        <AchievementPopup Clear={Clear[0]} title="まずは様子見" />
+        <AchievementPopup Clear={Clear[1]} title="連続王" />
+        <AchievementPopup Clear={Clear[2]} title="全会一致" />
+        <AchievementPopup Clear={Clear[3]} title="ギリギリセーフ" />
+        <AchievementPopup Clear={Clear[4]} title="もはや視力検査" />
+        <AchievementPopup Clear={Clear[7]} title="方向音痴" />
       </div>
     </div>
   );
