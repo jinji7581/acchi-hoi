@@ -124,7 +124,6 @@ const useDirection = () => {
 
             // 計算したエリア（インデックス）の方向を上書き
             setCameraDirections(sectorIndex, dir);
-            console.log(down_standard.current);
 
             newJoges[sectorIndex] = pitch;
             newSayuus[sectorIndex] = yaw;
