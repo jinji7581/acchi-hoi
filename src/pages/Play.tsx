@@ -345,6 +345,7 @@ const Play = () => {
       setPhase("arrow");
       //console.log("arrow");
     }
+    console.log(timer);
     if (timer === 7) {
       for (let i = 0; i < playerCount; i++) {
         setIsCenter((prev) => {
@@ -376,7 +377,7 @@ const Play = () => {
         }
       }
     }
-    if (timer === 10) {
+    if (timer === 9) {
       setPhase("waiting");
       //console.log("waiting");
       settimer(0);
@@ -393,12 +394,11 @@ const Play = () => {
               settimeScore(end - startRef.current);
             }
           }
-          if (round === 10) navigate("/Result"); //ポイント制プレイヤーが10ラウンドを終えたときの画面遷移
+          if (round >= 10) navigate("/Result"); //ポイント制プレイヤーが10ラウンドを終えたときの画面遷移
         }
       }
-      increaseRound();
 
-      if (isTimeAtack) {
+      if (isTimeAtack && !(round >= 10 && resultEffect[0] == "success")) {
         settimer(4);
       } else {
         setResultEffect(0, null);
@@ -406,6 +406,7 @@ const Play = () => {
         setResultEffect(2, null);
         setResultEffect(3, null);
       }
+      increaseRound();
     }
   }, [
     timer,

@@ -36,6 +36,7 @@ const Result: React.FC = () => {
   const setHasAchieved = useGameStore((state) => state.setHasAchieved);
   const [Clear, setClear] = useState([...isClear]);
   const [isMenu, setIsMenu] = useState<boolean>(false);
+  const setResultEffect = useGameStore((state) => state.setResultEffect);
 
   indexedScores.sort((a, b) => b.score - a.score);
   const sortedValues = indexedScores.map((item) => item.score);
@@ -61,6 +62,7 @@ const Result: React.FC = () => {
     for (let i = 0; i < playerCount; i++) {
       setScore(i, 0);
       setLifes(i, 3);
+      setResultEffect(i, null);
     }
     navigate("/Play");
     setRound(1);
