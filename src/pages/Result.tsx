@@ -82,6 +82,9 @@ const Result: React.FC = () => {
     setRound(1);
     navigate("/");
   };
+  const rank = () => {
+    playSoundB();
+  };
   const audioRefA = useRef<HTMLAudioElement | null>(null);
   const playSoundA = () => {
     if (!audioRefA.current) {
@@ -179,6 +182,10 @@ const Result: React.FC = () => {
           </button>
         </div>
       </div>
+      <button className="rank-button" onClick={rank}>
+        ランキング
+      </button>
+
       <div className="achievement-layer">
         <AchievementPopup Clear={Clear[5]} title="脊髄反射" />
         <AchievementPopup Clear={Clear[6]} title="今日はこのへんで" />

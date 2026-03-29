@@ -1032,6 +1032,24 @@ body,
   color: rgb(255, 255, 255);
   /* 文字の色 */
 }
+.rank-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  border: none;
+  /* 縁の色 */
+  width: 180px;
+  height: 60px;
+  background-image: url("../assets/button_Blue_1.png");
+  background-size: cover;
+  background-position: center;
+  background-color: transparent;
+  padding-bottom: 5px;
+  font-size: 20px;
+  padding-bottom: 5pt;
+  color: rgb(255, 255, 255);
+  /* 文字の色 */
+}
 
 .result-button:hover {
   background-image: url("../assets/button_Blue_2.png");
